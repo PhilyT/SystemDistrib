@@ -29,3 +29,14 @@ client/tdependency-reduced-pom.xml
 client/tbuildNumber.properties
 client/t.mvn/timing.properties
 client/client-1.0.jar
+
+ .project
+.settings/org.eclipse.m2e.core.prefs
+client/.classpath
+client/.project
+client/.settings/org.eclipse.jdt.core.prefs
+client/.settings/org.eclipse.m2e.core.prefs
+serveur/.classpath
+serveur/.project
+serveur/.settings/org.eclipse.jdt.core.prefs
+serveur/.settings/org.eclipse.m2e.core.prefs

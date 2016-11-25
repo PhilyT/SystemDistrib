@@ -1,4 +1,4 @@
-package com.m1miagaprojet.appclient;
+package com.m1miageprojet.appclient;
 
 public class AppClient
 {

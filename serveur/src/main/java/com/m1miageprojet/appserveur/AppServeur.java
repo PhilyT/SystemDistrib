@@ -1,4 +1,4 @@
-package com.m1miagaprojet.appserveur;
+package com.m1miageprojet.appserveur;
 
 public class AppServeur
 {

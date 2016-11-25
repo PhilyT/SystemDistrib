@@ -1,4 +1,4 @@
-package com.m1miageprojet.appclient;
+package com.m1miageprojet.appserveur;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
