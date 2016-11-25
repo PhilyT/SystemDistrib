@@ -30,7 +30,7 @@ client/tbuildNumber.properties
 client/t.mvn/timing.properties
 client/client-1.0.jar
 
- .project
+.project
 .settings/org.eclipse.m2e.core.prefs
 client/.classpath
 client/.project
