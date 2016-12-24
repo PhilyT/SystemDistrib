@@ -111,4 +111,15 @@ public class ChordPeer
 		pred.setSucc(this);
 		this.setSucc(S);
 	}
+	
+	/**
+	 * the node leave the chord
+	 */
+	public void LeaveChord()
+	{
+		ChordPeer succ = getSucc();
+		ChordPeer pred = getPred();
+		succ.setPred(pred);
+		pred.setSucc(succ);
+	}
 }

@@ -13,9 +13,9 @@ import junit.framework.TestCase;
 public class ChordPeerTest extends TestCase 
 {
 	/**
-	 * test la premiere condition de findKey
+	 * test la deuxieme condition de findKey
 	 */
-	public void testPremiereConditionFindKey()
+	public void testDeuxiemeConditionFindKey()
 	{
 		ArrayList<ChordPeer> chord = new ArrayList<ChordPeer>();
 		for(int i =0; i<4; i++)
@@ -41,9 +41,9 @@ public class ChordPeerTest extends TestCase
 	}
 	
 	/**
-	 * test la deuxieme condition de findKey
+	 * test la troixieme condition de findKey
 	 */
-	public void testDeuxiemeConditionDeFindKey()
+	public void testTroisiemeConditionDeFindKey()
 	{
 		ArrayList<ChordPeer> chord = new ArrayList<ChordPeer>();
 		for(int i =0; i<4; i++)
@@ -69,9 +69,9 @@ public class ChordPeerTest extends TestCase
 	}
 	
 	/**
-	 * test la troixieme condition de findKey
+	 * test la quatrieme condition de findKey
 	 */
-	public void testTroixiemeConditionDeFindKey()
+	public void testQuetriemeConditionDeFindKey()
 	{
 		ArrayList<ChordPeer> chord = new ArrayList<ChordPeer>();
 		for(int i =0; i<4; i++)
@@ -97,7 +97,7 @@ public class ChordPeerTest extends TestCase
 	}
 	
 	/**
-	 * test si les anneaux se rajoute bien dans le reseau
+	 * test si les neuds se rajoute bien dans le reseau
 	 */
 	public void testJoinChord()
 	{
@@ -108,8 +108,6 @@ public class ChordPeerTest extends TestCase
 		{
 			c2.setMyId(rand.nextInt(101));
 		}
-		System.out.println(c1.getMyId());
-		System.out.println(c2.getMyId());
 		c2.JoinChord(c1);
 
 		assertEquals(c1, c2.getPred());
@@ -117,5 +115,23 @@ public class ChordPeerTest extends TestCase
 
 		assertEquals(c2, c1.getPred());
 		assertEquals(c2, c1.getSucc());
+	}
+	
+	/**
+	 * test si les neuds quitte bien le reseau
+	 */
+	public void testLeaveChord()
+	{
+		ChordPeer c1 = new ChordPeer();
+		ChordPeer c2 = new ChordPeer();
+		Random rand = new Random();
+		while(c1.getMyId() == c2.getMyId())
+		{
+			c2.setMyId(rand.nextInt(101));
+		}
+		c2.JoinChord(c1);
+		c2.LeaveChord();
+		assertEquals(c1, c1.getPred());
+		assertEquals(c1, c1.getSucc());
 	}
 }

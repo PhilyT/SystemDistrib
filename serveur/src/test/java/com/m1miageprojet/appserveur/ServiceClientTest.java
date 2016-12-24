@@ -2,6 +2,15 @@ package com.m1miageprojet.appserveur;
 
 import junit.framework.TestCase;
 
-public class ServiceClientTest extends TestCase {
-
+/**
+ * 
+ * @author Tom
+ *
+ */
+public class ServiceClientTest extends TestCase 
+{
+	public void testBase()
+	{
+		assertTrue(true);
+	}
 }
