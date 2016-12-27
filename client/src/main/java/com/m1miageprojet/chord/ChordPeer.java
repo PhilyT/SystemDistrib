@@ -1,5 +1,6 @@
 package com.m1miageprojet.chord;
-
+import com.m1miageprojet.tcpcommunication.ConnexionListener;
+import com.m1miageprojet.tcpcommunication.DataSender;
 import java.util.Random;
 
 /**
@@ -10,6 +11,8 @@ import java.util.Random;
 public class ChordPeer 
 {
 	private int myId;
+        private int port;
+        private String ip;
 	private ChordPeer succ;
 	private ChordPeer pred;
 	
@@ -36,6 +39,22 @@ public class ChordPeer
 		this.myId = myId;
 	}
 
+        /**
+        * port getter
+        * @return 
+        */
+        public int getPort() {
+                return port;
+        }
+
+        /**
+        * ip getter 
+        * @return 
+        */
+        public String getIp() {
+                return ip;
+        }
+        
 	/**
 	 * @return the succ
 	 */
@@ -122,4 +141,33 @@ public class ChordPeer
 		succ.setPred(pred);
 		pred.setSucc(succ);
 	}
+        
+        /**
+        * send data (ex: text msg) to given chord peer
+        *
+        * @param key to target the wanted peer
+        * @param data is some data to communicate
+        */
+        public void sendData(int key, byte[] data) {
+
+                int port = this.getPort();
+                String ip = this.getIp();
+                DataSender sender = new DataSender(data, ip, port);
+                sender.start();
+
+        }
+
+        /**
+        * establish connexion by starting a listener on given chord peer using his
+        * key on the chord network
+        *
+        * @param key
+        */
+        public void establishConnection(int key) {
+
+                ChordPeer distinationPeer = findkey(key);
+                ConnexionListener listener = new ConnexionListener(distinationPeer.getPort());
+                listener.start();
+
+        }
 }

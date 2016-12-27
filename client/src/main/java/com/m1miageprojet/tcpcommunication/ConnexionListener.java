@@ -1,4 +1,4 @@
-package com.m1miageprojet.chord.tcpcommunication;
+package com.m1miageprojet.tcpcommunication;
 
 import java.io.BufferedReader;
 import java.io.IOException;
