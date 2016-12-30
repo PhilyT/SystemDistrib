@@ -11,8 +11,8 @@ import java.util.Random;
 public class ChordPeer 
 {
 	private int myId;
-        private int port;
-        private String ip;
+	private int port;
+    private String ip;
 	private ChordPeer succ;
 	private ChordPeer pred;
 	
@@ -39,21 +39,19 @@ public class ChordPeer
 		this.myId = myId;
 	}
 
-        /**
-        * port getter
-        * @return 
-        */
-        public int getPort() {
-                return port;
-        }
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
 
-        /**
-        * ip getter 
-        * @return 
-        */
-        public String getIp() {
-                return ip;
-        }
+	/**
+	 * @return the adresse ip
+	 */
+	public String getIp() {
+		return ip;
+	}
         
 	/**
 	 * @return the succ
