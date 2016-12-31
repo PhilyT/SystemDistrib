@@ -32,10 +32,16 @@ public class ChordPeer {
 		if (pred == this) {
 			return this;
 		}
-		if (pred.myId < this.myId && key > pred.myId && key <= this.myId) {
+
+		int predecessorId = pred.myId;
+		if (predecessorId < this.myId && key > predecessorId && key <= this.myId) {
 			return this;
-		} else if (pred.myId > this.myId && key <= this.myId) {
+		} else if (predecessorId > this.myId && key <= this.myId) {
 			return this;
+		} else if (predecessorId > this.myId && key >= predecessorId) {
+			return this;
+		} else if (succ.myId < this.myId) {
+			return succ;
 		} else {
 			return succ.findkey(key);
 		}

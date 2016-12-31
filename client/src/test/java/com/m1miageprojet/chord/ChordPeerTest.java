@@ -13,6 +13,7 @@ import junit.framework.TestCase;
 public class ChordPeerTest extends TestCase {
 
 	private ArrayList<ChordPeer> chord;
+	private ArrayList<ChordPeer> anotherChord;
 	private ChordPeer c1;
 	private ChordPeer c2;
 
@@ -35,6 +36,21 @@ public class ChordPeerTest extends TestCase {
 		chord.get(1).setPred(chord.get(0));
 		chord.get(2).setPred(chord.get(1));
 		chord.get(3).setPred(chord.get(2));
+
+		anotherChord = new ArrayList<ChordPeer>();
+		for (int i = 0; i < 2; i++) {
+			anotherChord.add(new ChordPeer());
+		}
+
+		// anotherChord is set on 64 keys
+		anotherChord.get(0).setMyId(5);
+		anotherChord.get(1).setMyId(55);
+
+		// set pred and succ
+		anotherChord.get(0).setSucc(anotherChord.get(1));
+		anotherChord.get(1).setSucc(anotherChord.get(0));
+		anotherChord.get(0).setPred(anotherChord.get(1));
+		anotherChord.get(1).setPred(anotherChord.get(0));
 
 		c1 = new ChordPeer();
 		c2 = new ChordPeer();
@@ -70,10 +86,10 @@ public class ChordPeerTest extends TestCase {
 	public void testQuatriemeConditionDeFindKey() {
 		assertEquals(chord.get(2), chord.get(0).findkey(18));
 	}
-	
-	public void testFailingCase() {
-		// produces a stack overflow
-		/*System.out.println(chord.get(1).findkey(97));*/
+
+	public void testValidValuesAfterMaxId() {
+		// 57 is a valid value because 57 < 63, 63 being the max valid value out of the 64 keys
+		assertEquals(anotherChord.get(0), anotherChord.get(0).findkey(57));
 	}
 
 	/**
