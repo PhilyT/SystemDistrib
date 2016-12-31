@@ -70,6 +70,11 @@ public class ChordPeerTest extends TestCase {
 	public void testQuatriemeConditionDeFindKey() {
 		assertEquals(chord.get(2), chord.get(0).findkey(18));
 	}
+	
+	public void testFailingCase() {
+		// produces a stack overflow
+		/*System.out.println(chord.get(1).findkey(97));*/
+	}
 
 	/**
 	 * test si les neuds se rajoute bien dans le reseau
