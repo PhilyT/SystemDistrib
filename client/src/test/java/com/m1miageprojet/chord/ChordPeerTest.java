@@ -108,7 +108,7 @@ public class ChordPeerTest extends TestCase
 		{
 			c2.setMyId(rand.nextInt(101));
 		}
-		c2.JoinChord(c1);
+		c2.joinChord(c1);
 
 		assertEquals(c1, c2.getPred());
 		assertEquals(c1, c2.getSucc());
@@ -129,8 +129,8 @@ public class ChordPeerTest extends TestCase
 		{
 			c2.setMyId(rand.nextInt(101));
 		}
-		c2.JoinChord(c1);
-		c2.LeaveChord();
+		c2.joinChord(c1);
+		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());
 	}
