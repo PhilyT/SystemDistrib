@@ -92,6 +92,11 @@ public class ChordPeerTest extends TestCase {
 		assertEquals(anotherChord.get(0), anotherChord.get(0).findkey(57));
 	}
 
+	public void testInvalidValuesAfterMaxId() {
+		// but 67 is not
+		/*assertEquals(null, anotherChord.get(0).findkey(67));*/
+	}
+
 	/**
 	 * test si les neuds se rajoute bien dans le reseau
 	 */
