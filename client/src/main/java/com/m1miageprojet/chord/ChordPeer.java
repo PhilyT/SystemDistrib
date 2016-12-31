@@ -16,9 +16,11 @@ public class ChordPeer {
 	private String ip;
 	private ChordPeer succ;
 	private ChordPeer pred;
+	private int maxKeyValue;
 
-	public ChordPeer() {
-		this.myId = new Random().nextInt(101);
+	public ChordPeer(int maxKeyValue) {
+		this.maxKeyValue = maxKeyValue;
+		this.myId = new Random().nextInt(maxKeyValue);
 		this.succ = this;
 		this.pred = this;
 	}
@@ -29,6 +31,10 @@ public class ChordPeer {
 	 * @return the node responsible for the key
 	 */
 	public ChordPeer findkey(int key) {
+		if (key >= maxKeyValue) {
+			return null;
+		}
+		
 		if (pred == this) {
 			return this;
 		}

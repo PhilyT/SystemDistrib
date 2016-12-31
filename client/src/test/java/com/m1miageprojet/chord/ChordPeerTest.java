@@ -20,7 +20,7 @@ public class ChordPeerTest extends TestCase {
 	public void setUp() {
 		chord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 4; i++) {
-			chord.add(new ChordPeer());
+			chord.add(new ChordPeer(101));
 		}
 		chord.get(0).setMyId(8);
 		chord.get(1).setMyId(13);
@@ -39,7 +39,7 @@ public class ChordPeerTest extends TestCase {
 
 		anotherChord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 2; i++) {
-			anotherChord.add(new ChordPeer());
+			anotherChord.add(new ChordPeer(64));
 		}
 
 		// anotherChord is set on 64 keys
@@ -52,8 +52,8 @@ public class ChordPeerTest extends TestCase {
 		anotherChord.get(0).setPred(anotherChord.get(1));
 		anotherChord.get(1).setPred(anotherChord.get(0));
 
-		c1 = new ChordPeer();
-		c2 = new ChordPeer();
+		c1 = new ChordPeer(101);
+		c2 = new ChordPeer(101);
 		Random rand = new Random();
 		while (c1.getMyId() == c2.getMyId()) {
 			c2.setMyId(rand.nextInt(101));
@@ -93,8 +93,8 @@ public class ChordPeerTest extends TestCase {
 	}
 
 	public void testInvalidValuesAfterMaxId() {
-		// but 67 is not
-		/*assertEquals(null, anotherChord.get(0).findkey(67));*/
+		// but 64 is not
+		assertEquals(null, anotherChord.get(0).findkey(64));
 	}
 
 	/**
@@ -113,12 +113,6 @@ public class ChordPeerTest extends TestCase {
 	 * test si les neuds quitte bien le reseau
 	 */
 	public void testLeaveChord() {
-		ChordPeer c1 = new ChordPeer();
-		ChordPeer c2 = new ChordPeer();
-		Random rand = new Random();
-		while (c1.getMyId() == c2.getMyId()) {
-			c2.setMyId(rand.nextInt(101));
-		}
 		c2.joinChord(c1);
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
