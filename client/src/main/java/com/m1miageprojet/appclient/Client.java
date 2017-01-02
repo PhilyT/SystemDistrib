@@ -1,14 +1,24 @@
 package com.m1miageprojet.appclient;
 
 import java.net.*;
+
 import java.io.*;
 import java.util.*;
+
+import javax.swing.JFrame;
+import javax.swing.JButton;
+import javax.swing.JFrame;
+import javax.swing.JLabel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextArea;
+import javax.swing.JTextField;
+
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
-public class Client 
+public class Client  extends JFrame
 {
 	private final String FINISH = "" + (char) 4;
 	private final String hote;
@@ -20,6 +30,8 @@ public class Client
 		this.hote = hote;
 		this.port = port;
 		this.id = mon_id;
+		initComponents();
+		
 	}
 
 	public void execute() 
@@ -70,6 +82,35 @@ public class Client
 			}
 		}
 	}
+	
+	 private void initComponents() {
+
+    	JTextField  jtextfield1= new JTextField();
+       JLabel  jLabel1 = new JLabel();
+       JTextField nomClient = new JTextField();
+       JLabel jLabel2 = new JLabel();
+       JTextField ipServeur = new JTextField();
+       JLabel jLabel3 = new JLabel();
+       JLabel jLabel4 = new JLabel();
+       JTextField  portServeur = new javax.swing.JTextField();
+       JScrollPane jScrollPane1 = new JScrollPane();
+       JTextArea text = new JTextArea();
+       JTextField input = new JTextField();
+       JButton  envoyer = new JButton();
+       JTextField  to = new JTextField();
+       JLabel jLabel5 = new JLabel();
+       JButton connect = new JButton();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+
+        jLabel1.setText("Port Client :");
+        jLabel2.setText("Nom :");
+        jLabel3.setText("@IP Serveur :");
+
+        jLabel4.setText("Port Serveur :");
+
+
+}
 
 	public static void main(String[] args) 
 	{
