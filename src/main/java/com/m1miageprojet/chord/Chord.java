@@ -25,8 +25,8 @@ public class DataTransmissionTest {
         System.out.print("def un key source: ");
         String keys = sc.nextLine();
         
-        System.out.print("def un key destination: ");
-        String keyd = sc.nextLine();
+       /* System.out.print("def un key destination: ");
+        String keyd = sc.nextLine();*/
         /*if (sc.nextLine().matches("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
 				System.out.println("Found good SSN: " + ssn);
 			}*/
@@ -39,6 +39,7 @@ public class DataTransmissionTest {
                 String data = peerN.getMyId() + " : " + line;
                 peerN.sendData(data.getBytes());
             }
+            sc.close();
             
         } catch (NumberFormatException | NullPointerException e) {
             System.err.println("port incorrecte");
