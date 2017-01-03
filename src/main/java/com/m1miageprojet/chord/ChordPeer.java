@@ -1,7 +1,10 @@
 package com.m1miageprojet.chord;
 
+import java.rmi.RemoteException;
+import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 
+import com.m1miageprojet.interfaces.IChordPeer;
 import com.m1miageprojet.tcpcommunication.ConnexionListener;
 import com.m1miageprojet.tcpcommunication.DataSender;
 
@@ -10,7 +13,11 @@ import com.m1miageprojet.tcpcommunication.DataSender;
  * @author Tom
  *
  */
-public class ChordPeer {
+public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 6268001654943831039L;
 	private int myId;
 	private int port;
 	private String ip;
@@ -18,9 +25,10 @@ public class ChordPeer {
 	private ChordPeer pred;
 	private int maxKeyValue;
 
-	public ChordPeer(int maxKeyValue, int port) {
+	public ChordPeer(int maxKeyValue, int port) throws RemoteException {
+		super();
 		this.maxKeyValue = maxKeyValue;
-                this.port = port;
+		this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
 		this.succ = this;
 		this.pred = this;
@@ -35,7 +43,7 @@ public class ChordPeer {
 		if (key >= maxKeyValue) {
 			return null;
 		}
-		
+
 		if (pred == this) {
 			return this;
 		}
@@ -66,6 +74,7 @@ public class ChordPeer {
 		this.pred = pred;
 		pred.succ = this;
 		this.succ = s;
+		this.establishConnection(s.getPort());
 	}
 
 	/**
@@ -93,8 +102,9 @@ public class ChordPeer {
 	 * @param key
 	 */
 	public void establishConnection(int key) {
-		//ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(key/*destinationPeer.port*/);
+		// ChordPeer destinationPeer = findkey(key);
+		ConnexionListener listener = new ConnexionListener(
+				key/* destinationPeer.port */);
 		listener.start();
 	}
 
@@ -113,6 +123,21 @@ public class ChordPeer {
 		this.myId = myId;
 	}
 
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port
+	 *            the port to set
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
 	/**
 	 * @return the succ
 	 */

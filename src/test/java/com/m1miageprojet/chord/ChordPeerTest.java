@@ -1,5 +1,6 @@
 package com.m1miageprojet.chord;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +18,7 @@ public class ChordPeerTest extends TestCase {
 	private ChordPeer c1;
 	private ChordPeer c2;
 
-	public void setUp() {
+	public void setUp() throws RemoteException {
 		chord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 4; i++) {
 			chord.add(new ChordPeer(101, 1111));
