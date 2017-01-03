@@ -13,3 +13,4 @@ client-1.0.jar
 .project
 .settings/org.eclipse.m2e.core.prefs
 bin/
+.metadata
