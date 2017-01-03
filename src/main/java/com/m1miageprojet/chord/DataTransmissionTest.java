@@ -17,11 +17,7 @@ public class DataTransmissionTest {
 
         /*System.out.print("def un key destination: ");
 		String keyd = sc.nextLine();*/
- /*
-		 * if (sc.nextLine().matches(
-		 * "^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$"
-		 * )) { System.out.println("Found good SSN: " + ssn); }
-         */
+
         try {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
             peerN.setMyId(Integer.parseInt(keys));
