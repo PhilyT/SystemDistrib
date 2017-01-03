@@ -1,6 +1,7 @@
 package com.m1miageprojet.tcpcommunication;
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.net.Socket;
 
 public class DataSender extends Thread {
@@ -8,12 +9,12 @@ public class DataSender extends Thread {
     int port;
     String ip;
     byte[] data;
-    
+
     /**
-     * 
+     *
      * @param data
      * @param ip
-     * @param port 
+     * @param port
      */
     public DataSender(byte[] data, String ip, int port) {
 
@@ -33,7 +34,7 @@ public class DataSender extends Thread {
             socket.close();
 
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.err.println("connexion refusé sur le port " + port);
         }
 
     }
