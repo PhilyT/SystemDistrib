@@ -20,7 +20,7 @@ public class ChordPeerTest extends TestCase {
 	public void setUp() {
 		chord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 4; i++) {
-			chord.add(new ChordPeer(101));
+			chord.add(new ChordPeer(101, 1111));
 		}
 		chord.get(0).setMyId(8);
 		chord.get(1).setMyId(13);
@@ -39,7 +39,7 @@ public class ChordPeerTest extends TestCase {
 
 		anotherChord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 2; i++) {
-			anotherChord.add(new ChordPeer(64));
+			anotherChord.add(new ChordPeer(64, 2222));
 		}
 
 		// anotherChord is set on 64 keys
@@ -52,8 +52,8 @@ public class ChordPeerTest extends TestCase {
 		anotherChord.get(0).setPred(anotherChord.get(1));
 		anotherChord.get(1).setPred(anotherChord.get(0));
 
-		c1 = new ChordPeer(101);
-		c2 = new ChordPeer(101);
+		c1 = new ChordPeer(101, 2000);
+		c2 = new ChordPeer(101, 4000);
 		Random rand = new Random();
 		while (c1.getMyId() == c2.getMyId()) {
 			c2.setMyId(rand.nextInt(101));
