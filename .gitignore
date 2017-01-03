@@ -9,7 +9,7 @@ buildNumber.properties
 .mvn/timing.properties
 .settings/
 .classpath
-client-1.0.jar
+chat-1.0.jar
 .project
 .settings/org.eclipse.m2e.core.prefs
 bin/
