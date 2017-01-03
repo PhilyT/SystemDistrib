@@ -1,17 +1,8 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.m1miageprojet.chord;
 
 import com.m1miageprojet.chord.ChordPeer;
 import java.util.Scanner;
 
-/**
- *
- * @author MAROUANE
- */
 public class DataTransmissionTest {
 
     public static void main(String[] args) {
@@ -25,8 +16,8 @@ public class DataTransmissionTest {
         System.out.print("def un key source: ");
         String keys = sc.nextLine();
         
-       /* System.out.print("def un key destination: ");
-        String keyd = sc.nextLine();*/
+        System.out.print("def un key destination: ");
+        String keyd = sc.nextLine();
         /*if (sc.nextLine().matches("^(([01]?\\d\\d?|2[0-4]\\d|25[0-5])\\.){3}([01]?\\d\\d?|2[0-4]\\d|25[0-5])$")) {
 				System.out.println("Found good SSN: " + ssn);
 			}*/
