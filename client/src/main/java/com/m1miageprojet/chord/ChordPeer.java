@@ -18,8 +18,9 @@ public class ChordPeer {
 	private ChordPeer pred;
 	private int maxKeyValue;
 
-	public ChordPeer(int maxKeyValue) {
+	public ChordPeer(int maxKeyValue, int port) {
 		this.maxKeyValue = maxKeyValue;
+                this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
 		this.succ = this;
 		this.pred = this;
@@ -78,8 +79,6 @@ public class ChordPeer {
 	/**
 	 * sends data to a given chord peer
 	 *
-	 * @param key
-	 *            to target the wanted peer
 	 * @param data
 	 *            is some data to communicate
 	 */
@@ -89,13 +88,13 @@ public class ChordPeer {
 	}
 
 	/**
-	 * establishes a connection to the peer using his key in the chord network
+	 * establish connection to the peer using his key in the chord network
 	 *
 	 * @param key
 	 */
 	public void establishConnection(int key) {
-		ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(destinationPeer.port);
+		//ChordPeer destinationPeer = findkey(key);
+		ConnexionListener listener = new ConnexionListener(key/*destinationPeer.port*/);
 		listener.start();
 	}
 
