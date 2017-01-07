@@ -4,11 +4,13 @@ import java.util.ArrayList;
 
 public class ChatRoom {
 	private ArrayList<ChordPeer> noeuds;
-	private byte[] message;
+	private int id;
+	private ArrayList<String> messages;
 	
-	public ChatRoom(ChordPeer noeud,byte[] message){
+	public ChatRoom(ChordPeer noeud,int id){
 		this.noeuds.add(noeud);
-		this.message=message;
+		this.setId(id);
+		this.messages = new ArrayList<String>();
 		
 	}
 	public ArrayList<ChordPeer> getNoeuds() {
@@ -17,11 +19,17 @@ public class ChatRoom {
 	public void setNoeuds(ArrayList<ChordPeer> noeuds) {
 		this.noeuds = noeuds;
 	}
-	public byte[] getMessage() {
-		return message;
+	public int getId() {
+		return id;
 	}
-	public void setMessage(byte[] message) {
-		this.message = message;
+	public void setId(int id) {
+		this.id = id;
 	}
-
+	public ArrayList<String> getMessages() {
+		return messages;
+	}
+	public void setMessages(ArrayList<String> messages) {
+		this.messages = messages;
+	}
+	
 }
