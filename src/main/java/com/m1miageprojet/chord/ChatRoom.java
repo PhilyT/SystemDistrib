@@ -6,7 +6,9 @@ public class ChatRoom {
 	private ArrayList<ChordPeer> noeuds;
 	private byte[] message;
 	
-	public ChatRoom(){
+	public ChatRoom(ChordPeer noeud,byte[] message){
+		this.noeuds.add(noeud);
+		this.message=message;
 		
 	}
 	public ArrayList<ChordPeer> getNoeuds() {
