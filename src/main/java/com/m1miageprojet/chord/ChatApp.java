@@ -44,7 +44,7 @@ public class ChatApp {
             peerN.establishConnection(Integer.parseInt(portd/* keyd */));
             System.out.println("chatter");
             while (!(line = sc.nextLine()).equals("\n")) {
-                if (!line.isEmpty()) {
+                if (!line.trim().isEmpty()) {
                     String data = peerN.getMyId() + " >> " + line;
                     peerN.sendData(data.getBytes());
                 }
