@@ -10,20 +10,25 @@ public class DataSender extends Thread {
     String ip;
     byte[] data;
 
+    public DataSender() {
+    }
+    
     /**
      *
      * @param data
      * @param ip
      * @param port
      */
-    public DataSender(byte[] data, String ip, int port) {
-
+    public synchronized void send(byte[] data, String ip, int port){
         this.port = port;
         this.ip = ip;
         this.data = data;
-
+        this.start();
     }
-
+    
+    /**
+     * run ..
+     */
     @Override
     public void run() {
 

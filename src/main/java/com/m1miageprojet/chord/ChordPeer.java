@@ -13,7 +13,7 @@ import com.m1miageprojet.tcpcommunication.DataSender;
  * @author Tom
  *
  */
-public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
+public class ChordPeer /*extends UnicastRemoteObject implements IChordPeer */{
 	/**
 	 * 
 	 */
@@ -25,8 +25,8 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	private ChordPeer pred;
 	private int maxKeyValue;
 
-	public ChordPeer(int maxKeyValue, int port) throws RemoteException {
-		super();
+	public ChordPeer(int maxKeyValue, int port)/* throws RemoteException */{
+		//super();
 		this.maxKeyValue = maxKeyValue;
 		this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
@@ -92,8 +92,8 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	 *            is some data to communicate
 	 */
 	public void sendData(byte[] data) {
-		DataSender sender = new DataSender(data, this.ip, this.port);
-		sender.start();
+		DataSender sender = new DataSender();
+		sender.send(data, this.ip, this.port);
 	}
 
 	/**

@@ -26,25 +26,25 @@ public class ChatApp {
 		String keyd = sc.nextLine();*/
 
         try {
-        	
+        	/*
         	// Enregistrement dans le registre de noms RMI de la classe distante ChordPeer
         	if(System.getSecurityManager() == null)
         	{
         		System.setSecurityManager(new RMISecurityManager());
         	}
-        	
+        	*/
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
-            String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
+            /*String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
             System.out.println("Enregistrement de l'objet avec l'url : " + url);
             Naming.rebind(url, peerN);
 
             System.out.println("Serveur lancé");
             // Fin enregistrement
-            
+            */
             peerN.setMyId(Integer.parseInt(keys));
             peerN.establishConnection(Integer.parseInt(portd/* keyd */));
             System.out.println("chatter");
-            while ((line = sc.nextLine()) != "\n") {
+            while (!(line = sc.nextLine()).equals("\n")) {
                 String data = peerN.getMyId() + " : " + line;
                 peerN.sendData(data.getBytes());
             }
@@ -54,7 +54,7 @@ public class ChatApp {
             System.err.println("port incorrecte");
         } catch (NullPointerException e) {
             System.err.println("port incorrecte");
-        } catch (RemoteException e) {
+        } /*catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -63,7 +63,7 @@ public class ChatApp {
 		} catch (UnknownHostException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}
+		}*/
 
     }
 
