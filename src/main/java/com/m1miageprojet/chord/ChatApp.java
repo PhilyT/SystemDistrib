@@ -1,6 +1,5 @@
 package com.m1miageprojet.chord;
 
-import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
 import java.rmi.Naming;
@@ -10,8 +9,8 @@ import java.util.Scanner;
 
 @SuppressWarnings("deprecation")
 public class ChatApp {
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String line = null;
 
@@ -24,15 +23,15 @@ public class ChatApp {
 
         /*System.out.print("def un key destination: ");
 		String keyd = sc.nextLine();*/
-
+        
         try {
-        	/*
+            /*
         	// Enregistrement dans le registre de noms RMI de la classe distante ChordPeer
         	if(System.getSecurityManager() == null)
         	{
         		System.setSecurityManager(new RMISecurityManager());
         	}
-        	*/
+             */
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
             /*String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
             System.out.println("Enregistrement de l'objet avec l'url : " + url);
@@ -40,13 +39,15 @@ public class ChatApp {
 
             System.out.println("Serveur lancé");
             // Fin enregistrement
-            */
+             */
             peerN.setMyId(Integer.parseInt(keys));
             peerN.establishConnection(Integer.parseInt(portd/* keyd */));
             System.out.println("chatter");
             while (!(line = sc.nextLine()).equals("\n")) {
-                String data = peerN.getMyId() + " : " + line;
-                peerN.sendData(data.getBytes());
+                if (!line.isEmpty()) {
+                    String data = peerN.getMyId() + " >> " + line;
+                    peerN.sendData(data.getBytes());
+                }
             }
             sc.close();
 
@@ -54,7 +55,8 @@ public class ChatApp {
             System.err.println("port incorrecte");
         } catch (NullPointerException e) {
             System.err.println("port incorrecte");
-        } /*catch (RemoteException e) {
+        }
+        /*catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
@@ -64,7 +66,7 @@ public class ChatApp {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}*/
-
+        
     }
 
 }
