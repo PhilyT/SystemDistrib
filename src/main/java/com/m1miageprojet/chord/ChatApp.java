@@ -1,14 +1,8 @@
 package com.m1miageprojet.chord;
 
-import java.net.InetAddress;
-import java.net.MalformedURLException;
-import java.net.UnknownHostException;
-import java.rmi.Naming;
-import java.rmi.RMISecurityManager;
 import java.rmi.RemoteException;
 import java.util.Scanner;
 
-@SuppressWarnings("deprecation")
 public class ChatApp {
 	
 	public static void main(String[] args) {
@@ -26,20 +20,7 @@ public class ChatApp {
 		String keyd = sc.nextLine();*/
 
         try {
-        	
-        	// Enregistrement dans le registre de noms RMI de la classe distante ChordPeer
-        	if(System.getSecurityManager() == null)
-        	{
-        		System.setSecurityManager(new RMISecurityManager());
-        	}
-        	
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
-            String url = "rmi://" + InetAddress.getLocalHost().getHostAddress() + "/TestRMI";
-            System.out.println("Enregistrement de l'objet avec l'url : " + url);
-            Naming.rebind(url, peerN);
-
-            System.out.println("Serveur lancé");
-            // Fin enregistrement
             
             peerN.setMyId(Integer.parseInt(keys));
             peerN.establishConnection(Integer.parseInt(portd/* keyd */));
@@ -57,14 +38,7 @@ public class ChatApp {
         } catch (RemoteException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} catch (MalformedURLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-
+		} 
     }
 
 }

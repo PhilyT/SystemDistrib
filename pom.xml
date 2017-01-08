@@ -19,7 +19,7 @@
 				<configuration>
 					<archive>
 						<manifest>
-							<mainClass>com.m1miageprojet.chord.DataTransmissionTest</mainClass>
+							<mainClass>com.m1miageprojet.chord.ChatApp</mainClass>
 						</manifest>
 					</archive>
 					<source>1.8</source>

@@ -1,7 +1,6 @@
 package com.m1miageprojet.tcpcommunication;
 
 import java.io.IOException;
-import java.net.ConnectException;
 import java.net.Socket;
 
 public class DataSender extends Thread {
