@@ -65,10 +65,10 @@ public class ChordPeer /*extends UnicastRemoteObject implements IChordPeer */{
 	/**
 	 * joins the chord
 	 * 
-	 * @param ChordPeerhandle
+	 * @param chordPeerHandle
 	 */
-	public void joinChord(ChordPeer ChordPeerhandle) {
-		ChordPeer s = ChordPeerhandle.findkey(myId);
+	public void joinChord(ChordPeer chordPeerHandle) {
+		ChordPeer s = chordPeerHandle.findkey(myId);
 		ChordPeer pred = s.pred;
 		s.pred = this;
 		this.pred = pred;
@@ -103,9 +103,8 @@ public class ChordPeer /*extends UnicastRemoteObject implements IChordPeer */{
 	 */
 	public void establishConnection(int key) {
 		// ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(
-				key/* destinationPeer.port */);
-		listener.start();
+		ConnexionListener listener = new ConnexionListener();
+		listener.listen(key/* destinationPeer.port */);
 	}
 
 	/**
