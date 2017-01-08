@@ -14,9 +14,14 @@ public class ConnexionListener extends Thread {
 
     /**
      * constructor
+     */
+    public ConnexionListener() {}
+    
+    /**
+     * listen a port
      * @param port 
      */
-    public ConnexionListener(int port) {
+    public void listen(int port){
         
         this.port = port;
         try {
@@ -25,8 +30,9 @@ public class ConnexionListener extends Thread {
 
         }
         
+        this.start();
+        
     }
-
     @Override
     public void run() {
         
@@ -46,7 +52,7 @@ public class ConnexionListener extends Thread {
             }
             
         } catch (IOException ex) {
-            ex.printStackTrace();
+            System.err.println("Erreur : lecture de données echoué.");
         }
     }
 

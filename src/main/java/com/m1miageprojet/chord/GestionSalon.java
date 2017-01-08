@@ -1,7 +1,6 @@
 package com.m1miageprojet.chord;
 
 import java.util.ArrayList;
-import java.util.Hashtable;
 
 public class GestionSalon {
 private ArrayList<ChatRoom> salles;
@@ -22,7 +21,7 @@ public GestionSalon(){
 		if(!salles.isEmpty() && !idSalles.isEmpty()){
 			
 				for(int i=0; i<idSalles.size(); i++){
-					if(idSalles.get(i)==(Integer)chatKey && salles.get(i).getId()==chatKey ){
+					if(idSalles.get(i).equals((Integer)chatKey) && salles.get(i).getId()==chatKey ){
 						
 								salles.get(i).getNoeuds().add(newNoeud);
 							}

@@ -1,7 +1,5 @@
 package com.m1miageprojet.chord;
 
-import java.rmi.RemoteException;
-import java.rmi.server.UnicastRemoteObject;
 import java.util.Random;
 
 import com.m1miageprojet.interfaces.IChordPeer;
@@ -13,11 +11,7 @@ import com.m1miageprojet.tcpcommunication.DataSender;
  * @author Tom
  *
  */
-public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = 6268001654943831039L;
+public class ChordPeer implements IChordPeer {
 	private int myId;
 	private int port;
 	private String ip;
@@ -25,8 +19,8 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	private ChordPeer pred;
 	private int maxKeyValue;
 
-	public ChordPeer(int maxKeyValue, int port) throws RemoteException {
-		super();
+	public ChordPeer(int maxKeyValue, int port)/* throws RemoteException */{
+		//super();
 		this.maxKeyValue = maxKeyValue;
 		this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
@@ -65,10 +59,10 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	/**
 	 * joins the chord
 	 * 
-	 * @param ChordPeerhandle
+	 * @param chordPeerHandle
 	 */
-	public void joinChord(ChordPeer ChordPeerhandle) {
-		ChordPeer s = ChordPeerhandle.findkey(myId);
+	public void joinChord(ChordPeer chordPeerHandle) {
+		ChordPeer s = chordPeerHandle.findkey(myId);
 		ChordPeer pred = s.pred;
 		s.pred = this;
 		this.pred = pred;
@@ -92,8 +86,8 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	 *            is some data to communicate
 	 */
 	public void sendData(byte[] data) {
-		DataSender sender = new DataSender(data, this.ip, this.port);
-		sender.start();
+		DataSender sender = new DataSender();
+		sender.send(data, this.ip, this.port);
 	}
 
 	/**
@@ -103,9 +97,8 @@ public class ChordPeer extends UnicastRemoteObject implements IChordPeer {
 	 */
 	public void establishConnection(int key) {
 		// ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(
-				key/* destinationPeer.port */);
-		listener.start();
+		ConnexionListener listener = new ConnexionListener();
+		listener.listen(key/* destinationPeer.port */);
 	}
 
 	/**

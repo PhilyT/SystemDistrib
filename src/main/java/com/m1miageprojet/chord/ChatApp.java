@@ -1,11 +1,10 @@
 package com.m1miageprojet.chord;
 
-import java.rmi.RemoteException;
 import java.util.Scanner;
 
 public class ChatApp {
-	
-	public static void main(String[] args) {
+
+    public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         String line = null;
 
@@ -18,16 +17,19 @@ public class ChatApp {
 
         /*System.out.print("def un key destination: ");
 		String keyd = sc.nextLine();*/
-
-        try {
+        
+        try 
+        {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
-            
+
             peerN.setMyId(Integer.parseInt(keys));
             peerN.establishConnection(Integer.parseInt(portd/* keyd */));
             System.out.println("chatter");
-            while ((line = sc.nextLine()) != "\n") {
-                String data = peerN.getMyId() + " : " + line;
-                peerN.sendData(data.getBytes());
+            while (!(line = sc.nextLine()).equals("\n")) {
+                if (!line.trim().isEmpty()) {
+                    String data = peerN.getMyId() + " >> " + line;
+                    peerN.sendData(data.getBytes());
+                }
             }
             sc.close();
 
@@ -35,10 +37,6 @@ public class ChatApp {
             System.err.println("port incorrecte");
         } catch (NullPointerException e) {
             System.err.println("port incorrecte");
-        } catch (RemoteException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
+        }
     }
-
 }
