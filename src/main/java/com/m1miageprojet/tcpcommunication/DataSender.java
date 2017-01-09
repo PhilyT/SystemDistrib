@@ -46,6 +46,7 @@ public class DataSender extends Thread {
             socket.getOutputStream().write(data);
             String msg = buffReader.readLine();
             if (msg != null) {
+        		System.out.println("passe par ici");
                 peer.setData(msg.getBytes());
             }
             socket.close();

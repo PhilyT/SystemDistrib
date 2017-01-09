@@ -51,6 +51,7 @@ public class ConnexionListener extends Thread {
                 	String[] contenu = msg.split(" ");
                 	if(isFindMainChord(contenu))
                 	{
+                		System.out.println("passe par ici");
                 		out.write(peer.findkey(Integer.parseInt(contenu[1])));
                 	}
                     System.out.println(msg);

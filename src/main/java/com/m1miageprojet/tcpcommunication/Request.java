@@ -19,18 +19,18 @@ public class Request {
 
     public Request(ChordPeer peer, int HandeledPeerPort) {
         this.peer = peer;
-        this.ds = new DataSender();
-        this.cl = new ConnexionListener();
+        this.ds = new DataSender(peer);
+        this.cl = new ConnexionListener(peer);
     }
     //create a new peer with port of chord 0
     public void sendRequest(String req, ChordPeer distPeer) {
-        cl.listen(distPeer.getPort());
+        cl.listen();
         
         if ("JOIN".equals(req)) {
             
             System.out.println("Requete: jointure du pair " + peer.getMyId());
             ds.send(("JOIN_" + peer.getMyId()).getBytes(), null, peer.getPort());
-            peer.joinChord(distPeer);
+            peer.joinChord(distPeer.getIp(), distPeer.getPort());
             
         } else if ("LEAVE".equals(req)) {
             

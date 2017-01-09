@@ -78,7 +78,15 @@ public class ChordPeer {
 		} else if (succ.myId < this.myId) {
 			return succ.getIp()+":"+succ.getPort()+";"+this.ip+":"+this.port;
 		} else {
-			return succ.findkey(key);
+			DataSender sender = new DataSender(this);
+			sender.send(("FindMainChord "+key).getBytes(), ip, port);
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new String(data);
 		}
 	}
 
