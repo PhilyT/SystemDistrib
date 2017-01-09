@@ -15,7 +15,6 @@ public class Request {
     private ChordPeer peer;
 
     private DataSender ds;
-    private ConnexionListener cl;
 
     public Request(ChordPeer peer, int HandeledPeerPort) {
         this.peer = peer;
@@ -41,17 +40,19 @@ public class Request {
     }
 
     public void processRequest(String req) {
-        String request = req.split("_")[0];
-        String peerId = req.split("_")[1];
-        int port = Integer.parseInt(req.split("_")[2]);
-        if (request.equals("JOIN")) {
-        	ChordPeer nouveau = new ChordPeer(101, port);
-        	nouveau.setMyId(Integer.parseInt(peerId));
-        	peer.joinChord(nouveau);
-            System.out.println("un peer vient de joindre le Chord avec l'Id: " + peerId);
-        } else if (request.equals("LEAVE")) {
-            System.out.println("un peer " + peerId + " vient de joindre le Chord");
-        }
-
+    	if(req.split("_").length == 3)
+    	{
+    		String request = req.split("_")[0];
+            String peerId = req.split("_")[1];
+            int port = Integer.parseInt(req.split("_")[2]);
+            if (request.equals("JOIN")) {
+            	ChordPeer nouveau = new ChordPeer(101, port);
+            	nouveau.setMyId(Integer.parseInt(peerId));
+            	nouveau.joinChord(peer);
+                System.out.println("un peer vient de joindre le Chord avec l'Id: " + peerId);
+            } else if (request.equals("LEAVE")) {
+                System.out.println("un peer " + peerId + " vient de joindre le Chord");
+            }
+    	}
     }
 }
