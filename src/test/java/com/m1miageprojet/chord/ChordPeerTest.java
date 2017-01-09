@@ -102,7 +102,7 @@ public class ChordPeerTest extends TestCase {
 	 * test si les neuds se rajoute bien dans le reseau
 	 */
 	public void testJoinChord() {
-		c2.joinChord(c1);
+		c2.joinChord(c1.getIp(), c1.getPort());
 		assertEquals(c1, c2.getPred());
 		assertEquals(c1, c2.getSucc());
 
@@ -114,7 +114,7 @@ public class ChordPeerTest extends TestCase {
 	 * test si les neuds quitte bien le reseau
 	 */
 	public void testLeaveChord() {
-		c2.joinChord(c1);
+		c2.joinChord(c1.getIp(), c1.getPort());
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());
