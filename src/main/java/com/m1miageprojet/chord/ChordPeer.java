@@ -20,7 +20,7 @@ public class ChordPeer {
 
 	public ChordPeer(int maxKeyValue, int port) {
 		this.maxKeyValue = maxKeyValue;
-                this.port = port;
+		this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
 		this.succ = this;
 		this.pred = this;
@@ -35,7 +35,7 @@ public class ChordPeer {
 		if (key >= maxKeyValue) {
 			return null;
 		}
-		
+
 		if (pred == this) {
 			return this;
 		}
@@ -93,8 +93,9 @@ public class ChordPeer {
 	 * @param key
 	 */
 	public void establishConnection(int key) {
-		//ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(key/*destinationPeer.port*/);
+		// ChordPeer destinationPeer = findkey(key);
+		ConnexionListener listener = new ConnexionListener(
+				key/* destinationPeer.port */);
 		listener.start();
 	}
 
