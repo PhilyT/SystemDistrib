@@ -41,14 +41,14 @@ public class DataSender extends Thread {
         try {
 
             Socket socket = new Socket(ip, port);
-            InputStream is = socket.getInputStream();
-            BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
+            //InputStream is = socket.getInputStream();
+            //BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
             socket.getOutputStream().write(data);
-            String msg = buffReader.readLine();
+            /*String msg = buffReader.readLine();
             if (msg != null) {
         		System.out.println("passe par ici");
                 peer.setData(msg.getBytes());
-            }
+            }*/
             socket.close();
 
         } catch (IOException ex) {

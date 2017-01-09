@@ -13,7 +13,7 @@ import com.m1miageprojet.chord.ChordPeer;
 public class ConnexionListener extends Thread {
     private ServerSocket serverSocket;
     private ChordPeer peer;
-
+    private Request req;
     /**
      * constructor
      */
@@ -25,9 +25,10 @@ public class ConnexionListener extends Thread {
      * listen a port
      * @param port 
      */
-    public void listen(){
+    public void listen(Request req){
         try {
             serverSocket = new ServerSocket(peer.getPort());
+            this.req = req;
         } catch (IOException ex) {
 
         }
@@ -44,16 +45,18 @@ public class ConnexionListener extends Thread {
             while ((clientSocket = serverSocket.accept()) != null) {
                 
                 InputStream is = clientSocket.getInputStream();
-                PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
+                //PrintWriter out = new PrintWriter(clientSocket.getOutputStream());
                 BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
                 String msg = buffReader.readLine();
                 if (msg != null) {
+                	/*System.out.println("reception de message");
                 	String[] contenu = msg.split(" ");
                 	if(isFindMainChord(contenu))
                 	{
                 		System.out.println("passe par ici");
                 		out.write(peer.findkey(Integer.parseInt(contenu[1])));
-                	}
+                	}*/
+                	
                     System.out.println(msg);
                 }
                 

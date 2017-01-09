@@ -4,6 +4,8 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
+import com.m1miageprojet.tcpcommunication.Request;
+
 import junit.framework.TestCase;
 
 /**
@@ -55,8 +57,10 @@ public class ChordPeerTest extends TestCase {
 
 		c1 = new ChordPeer(101, 2000);
 		c2 = new ChordPeer(101, 4000);
-		c1.runListener();
-		c2.runListener();
+		Request req1 = new Request(c1, c1.getPort());
+		Request req2 = new Request(c2, c2.getPort());
+		c1.runListener(req1);
+		c2.runListener(req2);
 		Random rand = new Random();
 		while (c1.getMyId() == c2.getMyId()) {
 			c2.setMyId(rand.nextInt(101));
@@ -105,7 +109,7 @@ public class ChordPeerTest extends TestCase {
 	 */
 	public void testJoinChord() {
 		
-		c2.joinChord(c1.getIp(), c1.getPort());
+		c2.joinChord(c1);
 		assertEquals(c1, c2.getPred());
 		assertEquals(c1, c2.getSucc());
 
@@ -118,7 +122,7 @@ public class ChordPeerTest extends TestCase {
 	 */
 	public void testLeaveChord() {
 		
-		c2.joinChord(c1.getIp(), c1.getPort());
+		c2.joinChord(c1);
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());

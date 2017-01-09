@@ -6,6 +6,7 @@ import java.util.Random;
 
 import com.m1miageprojet.tcpcommunication.ConnexionListener;
 import com.m1miageprojet.tcpcommunication.DataSender;
+import com.m1miageprojet.tcpcommunication.Request;
 
 /**
  * 
@@ -59,26 +60,26 @@ public class ChordPeer {
 	 * @param key
 	 * @return the ip's node responsible for the key
 	 */
-	public String findkey(int key) {
+	public ChordPeer findkey(int key) {
 		if (key >= maxKeyValue) {
 			return null;
 		}
 
 		if (pred == this) {
-			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+			return this;//this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		}
 
 		int predecessorId = pred.myId;
 		if (predecessorId < this.myId && key > predecessorId && key <= this.myId) {
-			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+			return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (predecessorId > this.myId && key <= this.myId) {
-			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+			return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (predecessorId > this.myId && key >= predecessorId) {
-			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+			return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (succ.myId < this.myId) {
-			return succ.getIp()+":"+succ.getPort()+";"+this.ip+":"+this.port;
+			return succ;//.getIp()+":"+succ.getPort()+";"+this.ip+":"+this.port;
 		} else {
-			DataSender sender = new DataSender(this);
+			/*DataSender sender = new DataSender(this);
 			sender.send(("FindMainChord "+key).getBytes(), ip, port);
 			try {
 				Thread.sleep(200);
@@ -86,7 +87,8 @@ public class ChordPeer {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			return new String(data);
+			return new String(data);*/
+			return succ.findkey(key);
 		}
 	}
 
@@ -95,30 +97,14 @@ public class ChordPeer {
 	 * 
 	 * @param chordPeerHandle
 	 */
-	public void joinChord(String ip, int port) {
-		DataSender sender = new DataSender(this);
-		sender.send(("FindMainChord "+myId).getBytes(), ip, port);
-		try {
-			Thread.sleep(200);
-		} catch (InterruptedException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		String response = new String(data);
-		System.out.println(response);
-		String s = response.split(";")[0];
-		String sIP = s.split(":")[0];
-		int sPort = Integer.parseInt(s.split(":")[1]);
-		ChordPeer successeur = new ChordPeer(maxKeyValue, sIP, sPort);
-		String p = response.split(";")[1];
-		String pIP = p.split(":")[0];
-		int pPort = Integer.parseInt(p.split(":")[1]);
-		ChordPeer pred = new ChordPeer(maxKeyValue, pIP, pPort);;
-		successeur.pred = this;
-		this.pred = pred;
-		pred.succ = this;
-		this.succ = successeur;
-		this.runListener();
+	public void joinChord(ChordPeer peer) {
+		
+		ChordPeer successeur = peer.findkey(getMyId());
+		ChordPeer predecesseur = successeur.getPred();
+		successeur.setPred(this);
+		this.setPred(predecesseur);
+		pred.setSucc(this);
+		this.setSucc(successeur);
 	}
 
 	/**
@@ -137,6 +123,7 @@ public class ChordPeer {
 	 */
 	public void sendData(byte[] data) {
 		DataSender sender = new DataSender(this);
+		System.out.println("print port succ : "+succ.getPort());
 		sender.send(data, succ.getIp(), succ.getPort());
 	}
 
@@ -145,10 +132,10 @@ public class ChordPeer {
 	 *
 	 * @param key
 	 */
-	public void runListener() {
+	public void runListener(Request req) {
 		// ChordPeer destinationPeer = findkey(key);
 		ConnexionListener listener = new ConnexionListener(this);
-		listener.listen();
+		listener.listen(req);
 	}
 
 	/**

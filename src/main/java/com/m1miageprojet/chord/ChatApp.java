@@ -1,6 +1,10 @@
 package com.m1miageprojet.chord;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Scanner;
+
+import com.m1miageprojet.tcpcommunication.Request;
 
 public class ChatApp {
 
@@ -23,7 +27,13 @@ public class ChatApp {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
 
             peerN.setMyId(Integer.parseInt(keys));
-            peerN.runListener();
+            Request req = new Request(peerN, peerN.getPort());
+            peerN.runListener(req);
+            if(!portd.isEmpty())
+            {
+            	ChordPeer dest = new ChordPeer(101, Integer.parseInt(portd));
+            	req.sendRequest("JOIN", dest);
+            }
             System.out.println("chatter");
             while (!(line = sc.nextLine()).equals("\n")) {
                 if (!line.trim().isEmpty()) {
@@ -37,6 +47,9 @@ public class ChatApp {
             System.err.println("port incorrecte");
         } catch (NullPointerException e) {
             System.err.println("port incorrecte");
-        }
+        } /*catch (UnknownHostException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}*/
     }
 }
