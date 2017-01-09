@@ -23,7 +23,7 @@ public class ChatApp {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
 
             peerN.setMyId(Integer.parseInt(keys));
-            peerN.establishConnection(Integer.parseInt(portd/* keyd */));
+            peerN.runListener();
             System.out.println("chatter");
             while (!(line = sc.nextLine()).equals("\n")) {
                 if (!line.trim().isEmpty()) {
