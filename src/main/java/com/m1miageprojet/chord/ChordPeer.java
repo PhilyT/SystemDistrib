@@ -1,5 +1,7 @@
 package com.m1miageprojet.chord;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.Random;
 
 import com.m1miageprojet.tcpcommunication.ConnexionListener;
@@ -17,8 +19,34 @@ public class ChordPeer {
 	private ChordPeer succ;
 	private ChordPeer pred;
 	private int maxKeyValue;
+	private byte[] data;
 
-	public ChordPeer(int maxKeyValue, int port) {
+	/**
+	 * Constructor for the Main Peer
+	 * @param maxKeyValue
+	 * @param port
+	 */
+	public ChordPeer(int maxKeyValue, int port){
+		try {
+			this.ip = InetAddress.getLocalHost().getHostAddress();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+		this.maxKeyValue = maxKeyValue;
+		this.port = port;
+		this.myId = new Random().nextInt(maxKeyValue);
+		this.succ = this;
+		this.pred = this;
+	}
+	
+	/**
+	 * Constructor for succ and prec.
+	 * @param maxKeyValue
+	 * @param ip
+	 * @param port
+	 */
+	public ChordPeer(int maxKeyValue, String ip, int port){
+		this.ip = ip;
 		this.maxKeyValue = maxKeyValue;
 		this.port = port;
 		this.myId = new Random().nextInt(maxKeyValue);
@@ -29,43 +57,68 @@ public class ChordPeer {
 	/**
 	 * 
 	 * @param key
-	 * @return the node responsible for the key
+	 * @return the ip's node responsible for the key
 	 */
-	public ChordPeer findkey(int key) {
+	public String findkey(int key) {
 		if (key >= maxKeyValue) {
 			return null;
 		}
 
 		if (pred == this) {
-			return this;
+			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		}
 
 		int predecessorId = pred.myId;
 		if (predecessorId < this.myId && key > predecessorId && key <= this.myId) {
-			return this;
+			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (predecessorId > this.myId && key <= this.myId) {
-			return this;
+			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (predecessorId > this.myId && key >= predecessorId) {
-			return this;
+			return this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
 		} else if (succ.myId < this.myId) {
-			return succ;
+			return succ.getIp()+":"+succ.getPort()+";"+this.ip+":"+this.port;
 		} else {
-			return succ.findkey(key);
+			DataSender sender = new DataSender(this);
+			sender.send(("FindMainChord "+key).getBytes(), ip, port);
+			try {
+				Thread.sleep(200);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			return new String(data);
 		}
 	}
 
 	/**
 	 * joins the chord
 	 * 
-	 * @param ChordPeerhandle
+	 * @param chordPeerHandle
 	 */
-	public void joinChord(ChordPeer ChordPeerhandle) {
-		ChordPeer s = ChordPeerhandle.findkey(myId);
-		ChordPeer pred = s.pred;
-		s.pred = this;
+	public void joinChord(String ip, int port) {
+		DataSender sender = new DataSender(this);
+		sender.send(("FindMainChord "+myId).getBytes(), ip, port);
+		try {
+			Thread.sleep(200);
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		String response = new String(data);
+		System.out.println(response);
+		String s = response.split(";")[0];
+		String sIP = s.split(":")[0];
+		int sPort = Integer.parseInt(s.split(":")[1]);
+		ChordPeer successeur = new ChordPeer(maxKeyValue, sIP, sPort);
+		String p = response.split(";")[1];
+		String pIP = p.split(":")[0];
+		int pPort = Integer.parseInt(p.split(":")[1]);
+		ChordPeer pred = new ChordPeer(maxKeyValue, pIP, pPort);;
+		successeur.pred = this;
 		this.pred = pred;
 		pred.succ = this;
-		this.succ = s;
+		this.succ = successeur;
+		this.runListener();
 	}
 
 	/**
@@ -83,20 +136,19 @@ public class ChordPeer {
 	 *            is some data to communicate
 	 */
 	public void sendData(byte[] data) {
-		DataSender sender = new DataSender(data, this.ip, this.port);
-		sender.start();
+		DataSender sender = new DataSender(this);
+		sender.send(data, succ.getIp(), succ.getPort());
 	}
 
 	/**
-	 * establish connection to the peer using his key in the chord network
+	 * run the ConnexionListener
 	 *
 	 * @param key
 	 */
-	public void establishConnection(int key) {
+	public void runListener() {
 		// ChordPeer destinationPeer = findkey(key);
-		ConnexionListener listener = new ConnexionListener(
-				key/* destinationPeer.port */);
-		listener.start();
+		ConnexionListener listener = new ConnexionListener(this);
+		listener.listen();
 	}
 
 	/**
@@ -113,7 +165,37 @@ public class ChordPeer {
 	public void setMyId(int myId) {
 		this.myId = myId;
 	}
+	
+	/**
+	 * @return the adresse ip
+	 */
+	public String getIp() {
+		return ip;
+	}
 
+	/**
+	 * @param ip
+	 *            the ip to set
+	 */
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+
+	/**
+	 * @return the port
+	 */
+	public int getPort() {
+		return port;
+	}
+
+	/**
+	 * @param port
+	 *            the port to set
+	 */
+	public void setPort(int port) {
+		this.port = port;
+	}
+	
 	/**
 	 * @return the succ
 	 */
@@ -142,6 +224,20 @@ public class ChordPeer {
 	 */
 	public void setPred(ChordPeer pred) {
 		this.pred = pred;
+	}
+
+	/**
+	 * @return the data
+	 */
+	public byte[] getData() {
+		return data;
+	}
+
+	/**
+	 * @param data the data to set
+	 */
+	public void setData(byte[] data) {
+		this.data = data;
 	}
 
 	/**

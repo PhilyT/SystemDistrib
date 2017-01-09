@@ -1,5 +1,6 @@
 package com.m1miageprojet.chord;
 
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -17,7 +18,7 @@ public class ChordPeerTest extends TestCase {
 	private ChordPeer c1;
 	private ChordPeer c2;
 
-	public void setUp() {
+	public void setUp() throws RemoteException {
 		chord = new ArrayList<ChordPeer>();
 		for (int i = 0; i < 4; i++) {
 			chord.add(new ChordPeer(101, 1111));
@@ -54,6 +55,8 @@ public class ChordPeerTest extends TestCase {
 
 		c1 = new ChordPeer(101, 2000);
 		c2 = new ChordPeer(101, 4000);
+		c1.runListener();
+		c2.runListener();
 		Random rand = new Random();
 		while (c1.getMyId() == c2.getMyId()) {
 			c2.setMyId(rand.nextInt(101));
@@ -101,7 +104,8 @@ public class ChordPeerTest extends TestCase {
 	 * test si les neuds se rajoute bien dans le reseau
 	 */
 	public void testJoinChord() {
-		c2.joinChord(c1);
+		
+		c2.joinChord(c1.getIp(), c1.getPort());
 		assertEquals(c1, c2.getPred());
 		assertEquals(c1, c2.getSucc());
 
@@ -113,7 +117,8 @@ public class ChordPeerTest extends TestCase {
 	 * test si les neuds quitte bien le reseau
 	 */
 	public void testLeaveChord() {
-		c2.joinChord(c1);
+		
+		c2.joinChord(c1.getIp(), c1.getPort());
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());

@@ -2,7 +2,7 @@ package com.m1miageprojet.chord;
 
 import java.util.Scanner;
 
-public class DataTransmissionTest {
+public class ChatApp {
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
@@ -17,15 +17,19 @@ public class DataTransmissionTest {
 
         /*System.out.print("def un key destination: ");
 		String keyd = sc.nextLine();*/
-
-        try {
+        
+        try 
+        {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
+
             peerN.setMyId(Integer.parseInt(keys));
-            peerN.establishConnection(Integer.parseInt(portd/* keyd */));
+            peerN.runListener();
             System.out.println("chatter");
-            while ((line = sc.nextLine()) != "\n") {
-                String data = peerN.getMyId() + " : " + line;
-                peerN.sendData(data.getBytes());
+            while (!(line = sc.nextLine()).equals("\n")) {
+                if (!line.trim().isEmpty()) {
+                    String data = peerN.getMyId() + " >> " + line;
+                    peerN.sendData(data.getBytes());
+                }
             }
             sc.close();
 
@@ -34,7 +38,5 @@ public class DataTransmissionTest {
         } catch (NullPointerException e) {
             System.err.println("port incorrecte");
         }
-
     }
-
 }
