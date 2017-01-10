@@ -17,6 +17,7 @@ public class ConnexionListener extends Thread {
 
     /**
      * constructor
+     * @param peer
      */
     public ConnexionListener(ChordPeer peer) {
         this.peer = peer;
@@ -24,8 +25,7 @@ public class ConnexionListener extends Thread {
 
     /**
      * listen a port
-     *
-     * @param port
+     * @param req
      */
     public void listen(Request req) {
         try {

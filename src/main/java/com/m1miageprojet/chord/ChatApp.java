@@ -23,7 +23,7 @@ public class ChatApp {
             peerN.setMyId(Integer.parseInt(keys));
             Request req = new Request(peerN, peerN.getPort());
             peerN.runListener(req);
-            
+
             if (!portd.isEmpty()) {
                 ChordPeer dest = new ChordPeer(101, Integer.parseInt(portd));
                 req.sendRequest("JOIN", dest);
