@@ -1,16 +1,7 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package com.m1miageprojet.tcpcommunication;
 
 import com.m1miageprojet.chord.ChordPeer;
 
-/**
- *
- * @author MAROUANE
- */
 public class Request {
     private ChordPeer peer;
 
@@ -20,7 +11,7 @@ public class Request {
         this.peer = peer;
         this.ds = new DataSender(peer);
     }
-    //create a new peer with port of chord 0
+    
     public void sendRequest(String req, ChordPeer distPeer) {
         
         if ("JOIN".equals(req)) {

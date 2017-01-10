@@ -10,21 +10,24 @@ import java.net.Socket;
 import com.m1miageprojet.chord.ChordPeer;
 
 public class ConnexionListener extends Thread {
+
     private ServerSocket serverSocket;
     private ChordPeer peer;
     private Request req;
+
     /**
      * constructor
      */
     public ConnexionListener(ChordPeer peer) {
-    	this.peer = peer;
+        this.peer = peer;
     }
-    
+
     /**
      * listen a port
-     * @param port 
+     *
+     * @param port
      */
-    public void listen(Request req){
+    public void listen(Request req) {
         try {
             serverSocket = new ServerSocket(peer.getPort());
             this.req = req;
@@ -33,26 +36,26 @@ public class ConnexionListener extends Thread {
         }
         this.start();
     }
-    
+
     @Override
     public void run() {
-        
+
         Socket clientSocket;
-        
+
         try {
-            
+
             while ((clientSocket = serverSocket.accept()) != null) {
-                
+
                 InputStream is = clientSocket.getInputStream();
                 BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
                 String msg = buffReader.readLine();
                 if (msg != null) {
-                	req.processRequest(msg);
+                    req.processRequest(msg);
                     System.out.println(msg);
                 }
-                
+
             }
-            
+
         } catch (IOException ex) {
             System.err.println("Erreur : lecture de données echoué.");
         }

@@ -1,6 +1,5 @@
 package com.m1miageprojet.tcpcommunication;
 
-
 import java.io.IOException;
 
 import java.net.Socket;
@@ -15,22 +14,22 @@ public class DataSender extends Thread {
     private ChordPeer peer;
 
     public DataSender(ChordPeer peer) {
-    	this.peer = peer;
+        this.peer = peer;
     }
-    
+
     /**
      *
      * @param data
      * @param ip
      * @param port
      */
-    public synchronized void send(byte[] data, String ip, int port){
+    public synchronized void send(byte[] data, String ip, int port) {
         this.port = port;
         this.ip = ip;
         this.data = data;
         this.start();
     }
-    
+
     /**
      * run ..
      */
