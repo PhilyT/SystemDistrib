@@ -3,6 +3,9 @@ package com.m1miageprojet.chord;
 import java.util.Scanner;
 
 import com.m1miageprojet.tcpcommunication.Request;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 public class ChatApp {
 
@@ -28,11 +31,57 @@ public class ChatApp {
                 ChordPeer dest = new ChordPeer(101, Integer.parseInt(portd));
                 req.sendRequest("JOIN", dest);
             }
-            System.out.println("chatter");
+            System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\t-Q: quitter");
             while (!(line = sc.nextLine()).equals("\n")) {
                 if (!line.trim().isEmpty()) {
-                    String data = peerN.getMyId() + " >> " + line;
-                    peerN.sendData(data.getBytes());
+                    switch (line.toLowerCase()) {
+                        case "-q":
+                            //close all kind of listener or thread
+                            System.out.println("sortir de l'application");
+                            System.exit(0);
+                        case "-i":
+
+                            //show chordPeer infos
+                            System.out.println("//Infos ChordPeer:\n//  Key: " + peerN.getMyId() + "\n//  Pred: " + peerN.getPred() + "\n//  Succ: " + peerN.getSucc());
+                            break;
+
+                        case "-c":
+                            //start chatting ..
+                            System.out.println("chatter :)");
+
+                            while (!(line = sc.nextLine()).equals("\n")) {
+                                if ("-q".equals(line)) {
+                                    System.out.println("sortir du chat ..");
+                                    break;
+                                }
+                                if (line != "-c") {
+                                    String data = peerN.getMyId() + " >> " + line;
+                                    peerN.sendData(data.getBytes());
+                                }
+
+                            }
+
+                            break;
+                        case "cls":
+                            final String os = System.getProperty("os.name");
+                            if (os.contains("Windows")) {
+                                try {
+                                    new ProcessBuilder("cmd", "/c", "cls").inheritIO().start().waitFor();
+                                } catch (IOException | InterruptedException ex) {
+                                    Logger.getLogger(ChatApp.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } else {
+                                try {
+                                    Runtime.getRuntime().exec("clear");
+                                } catch (IOException ex) {
+                                    Logger.getLogger(ChatApp.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            }
+                            break;
+                        default:
+                            System.err.println("commande introuvable.");
+                    }
+
                 }
             }
             sc.close();
