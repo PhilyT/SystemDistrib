@@ -22,7 +22,4 @@ public class Annuaire {
         System.out.println("Nouvel utilsateur ajouté");
     }
 
-    public synchronized void Maj(ChordPeer user) {
-
-    }
 }
