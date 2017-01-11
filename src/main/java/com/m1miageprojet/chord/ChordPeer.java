@@ -17,6 +17,7 @@ public class ChordPeer {
     private ChordPeer pred;
     private int maxKeyValue;
     private byte[] data;
+    private GestionSalon gestionSalon;
 
     /**
      * Constructor for the Main Peer
@@ -226,4 +227,10 @@ public class ChordPeer {
     public String toString() {
         return "ChordPeer [myId=" + myId + "]";
     }
+
+	public GestionSalon getGestionSalon() {
+		return gestionSalon;
+	}
+
+	
 }
