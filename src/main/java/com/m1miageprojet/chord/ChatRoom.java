@@ -3,7 +3,7 @@ package com.m1miageprojet.chord;
 import java.util.ArrayList;
 
 public class ChatRoom {
-	private ArrayList<ChordPeer> noeuds;
+	private ArrayList<ChordPeer> noeuds = new ArrayList<ChordPeer>();
 	private int id;
 	private ArrayList<String> messages;
 	

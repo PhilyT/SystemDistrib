@@ -80,7 +80,7 @@ public class ChatApp {
                             System.err.println("commande introuvable.");
                     }
                 }
-            }
+               }
             sc.close();
 
         } catch (NumberFormatException | NullPointerException e) {
@@ -99,5 +99,6 @@ public class ChatApp {
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(ChatApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 }
