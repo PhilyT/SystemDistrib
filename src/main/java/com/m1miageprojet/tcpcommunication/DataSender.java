@@ -4,18 +4,11 @@ import java.io.IOException;
 
 import java.net.Socket;
 
-import com.m1miageprojet.chord.ChordPeer;
-
 public class DataSender extends Thread {
 
     private int port;
     private String ip;
     private byte[] data;
-    private ChordPeer peer;
-
-    public DataSender(ChordPeer peer) {
-        this.peer = peer;
-    }
 
     /**
      *

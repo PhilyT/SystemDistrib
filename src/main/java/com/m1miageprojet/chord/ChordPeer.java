@@ -4,8 +4,10 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.Random;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.m1miageprojet.tcpcommunication.ConnexionListener;
-import com.m1miageprojet.tcpcommunication.DataSender;
 import com.m1miageprojet.tcpcommunication.Request;
 
 public class ChordPeer {
@@ -16,7 +18,6 @@ public class ChordPeer {
     private ChordPeer succ;
     private ChordPeer pred;
     private int maxKeyValue;
-    private byte[] data;
 
     /**
      * Constructor for the Main Peer
@@ -38,7 +39,7 @@ public class ChordPeer {
     }
 
     /**
-     * Constructor for succ and prec.
+     * Constructor for recipients peers
      *
      * @param maxKeyValue
      * @param ip
@@ -52,6 +53,36 @@ public class ChordPeer {
         this.succ = this;
         this.pred = this;
     }
+    
+    /**
+     * Constructor with JSON object
+     * @param json
+     */
+    public ChordPeer(JSONObject json)
+    {
+    	try 
+    	{
+			int profondeur = json.getInt("profondeur");
+			this.ip = json.getString("ip");
+			this.port = json.getInt("port");
+			this.maxKeyValue = json.getInt("maxKeyValue");
+			this.myId = json.getInt("key");
+			if(profondeur > 0)
+			{
+				this.succ = new ChordPeer(json.getJSONObject("succ"));
+		        this.pred = new ChordPeer(json.getJSONObject("pred"));;
+			}
+			else
+			{
+				this.succ = this;
+		        this.pred = this;
+			}
+		} 
+    	catch (JSONException e) 
+    	{
+			e.printStackTrace();
+		}
+    }
 
     /**
      *
@@ -64,28 +95,19 @@ public class ChordPeer {
         }
 
         if (pred == this) {
-            return this;//this.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+            return this;
         }
 
         int predecessorId = pred.myId;
         if (predecessorId < this.myId && key > predecessorId && key <= this.myId) {
-            return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+            return this;
         } else if (predecessorId > this.myId && key <= this.myId) {
-            return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+            return this;
         } else if (predecessorId > this.myId && key >= predecessorId) {
-            return this;//.ip+":"+this.port+";"+pred.getIp()+":"+pred.getPort();
+            return this;
         } else if (succ.myId < this.myId) {
-            return succ;//.getIp()+":"+succ.getPort()+";"+this.ip+":"+this.port;
-        } else {
-            /*DataSender sender = new DataSender(this);
-			sender.send(("FindMainChord "+key).getBytes(), ip, port);
-			try {
-				Thread.sleep(200);
-			} catch (InterruptedException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			return new String(data);*/
+            return succ;
+        } else {    
             return succ.findkey(key);
         }
     }
@@ -119,9 +141,8 @@ public class ChordPeer {
      * @param data is some data to communicate
      */
     public void sendData(byte[] data) {
-        DataSender sender = new DataSender(this);
-        System.out.println("print port succ : " + succ.getPort());
-        sender.send(data, succ.getIp(), succ.getPort());
+        Request req = new Request(this, myId);
+        req.sendRequest(data, succ);
     }
 
     /**
@@ -206,20 +227,6 @@ public class ChordPeer {
     }
 
     /**
-     * @return the data
-     */
-    public byte[] getData() {
-        return data;
-    }
-
-    /**
-     * @param data the data to set
-     */
-    public void setData(byte[] data) {
-        this.data = data;
-    }
-
-    /**
      * @return the className with value of myId
      */
     @Override
@@ -227,8 +234,32 @@ public class ChordPeer {
         return "ChordPeer [myId=" + myId + "]";
     }
     
-    public byte[] toByte(){
-    	//JSONObject objectJson = new JSONObject();
-    	return null;
+    /**
+     * 
+     * @param peer's profondeur
+     * @return JSONObject
+     */
+    public JSONObject toJSON(int profondeur)
+    {
+    	JSONObject json = new JSONObject();
+    	try 
+		{
+			json.put("ip", getIp());
+			json.put("port", getPort());
+			json.put("key", getMyId());
+			json.put("profondeur", profondeur);
+			json.put("maxKeyValue", maxKeyValue);
+			if(profondeur > 0)
+	    	{
+				json.put("succ", succ.toJSON(profondeur-1));
+				json.put("pred", pred.toJSON(profondeur-1));
+	    	}
+		} 
+		catch (JSONException e) 
+		{
+			e.printStackTrace();
+		}
+    	return json;
     }
+    
 }

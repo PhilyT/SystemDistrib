@@ -1,5 +1,6 @@
 package com.m1miageprojet.chord;
 
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 
 import com.m1miageprojet.tcpcommunication.Request;
@@ -15,10 +16,8 @@ public class ChatApp {
 
         System.out.print("def un port source: ");
         String ports = sc.nextLine();
-        System.out.print("def un port destination: ");
+        System.out.print("def un port destination (ne pas definir si il sagit du premier client): ");
         String portd = sc.nextLine();
-        System.out.print("def un key destination: ");
-        String keyd = sc.nextLine();
         System.out.print("def un key source: ");
         String keys = sc.nextLine();
 
@@ -30,7 +29,11 @@ public class ChatApp {
             peerN.runListener(req);
 
             if (!portd.isEmpty()) {
-                ChordPeer dest = new ChordPeer(101, Integer.parseInt(portd));
+            	System.out.print("def ip destination: ");
+                String ipd = sc.nextLine();
+                System.out.print("def un key destination: ");
+                String keyd = sc.nextLine();
+                ChordPeer dest = new ChordPeer(101, ipd, Integer.parseInt(portd));
                 dest.setMyId(Integer.parseInt(keyd));
                 req.sendRequest("JOIN", dest);
             }
@@ -85,6 +88,10 @@ public class ChatApp {
 
         } catch (NumberFormatException | NullPointerException e) {
             System.err.println("port incorrecte");
+        }
+        catch (NoSuchElementException e)
+        {
+        	System.err.println("Arret de l'application");
         }
     }
 

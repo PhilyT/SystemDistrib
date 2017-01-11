@@ -51,7 +51,6 @@ public class ConnexionListener extends Thread {
                 String msg = buffReader.readLine();
                 if (msg != null) {
                     req.processRequest(msg);
-                    System.out.println(msg);
                 }
 
             }
