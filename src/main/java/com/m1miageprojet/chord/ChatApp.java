@@ -17,6 +17,8 @@ public class ChatApp {
         String ports = sc.nextLine();
         System.out.print("def un port destination: ");
         String portd = sc.nextLine();
+        System.out.print("def un key destination: ");
+        String keyd = sc.nextLine();
         System.out.print("def un key source: ");
         String keys = sc.nextLine();
 
@@ -29,6 +31,7 @@ public class ChatApp {
 
             if (!portd.isEmpty()) {
                 ChordPeer dest = new ChordPeer(101, Integer.parseInt(portd));
+                dest.setMyId(Integer.parseInt(keyd));
                 req.sendRequest("JOIN", dest);
             }
 

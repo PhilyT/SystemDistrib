@@ -226,4 +226,9 @@ public class ChordPeer {
     public String toString() {
         return "ChordPeer [myId=" + myId + "]";
     }
+    
+    public byte[] toByte(){
+    	//JSONObject objectJson = new JSONObject();
+    	return null;
+    }
 }
