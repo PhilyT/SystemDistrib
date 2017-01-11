@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 public class GestionSalon {
 
-    private ArrayList<ChatRoom> salles;
+	private ArrayList<ChatRoom> salles;
     private ArrayList<Integer> idSalles;
 
     public GestionSalon() {
@@ -31,7 +31,10 @@ public class GestionSalon {
             }
 
         } else {
-            System.out.println("salon vide");
+            System.out.println("Nouveau salon");
+        	salles.add(new ChatRoom(newNoeud, chatKey));
+            idSalles.add((Integer) chatKey);
+        	
         }
 
     }
@@ -73,6 +76,9 @@ public class GestionSalon {
         }
 
         return s;
+    }
+    public ArrayList<ChatRoom> getChatRoom(){
+    	return this.salles;
     }
 
 }
