@@ -111,6 +111,11 @@ public class ChordPeer {
     public void leaveChord() {
         succ.pred = this.pred;
         pred.succ = this.succ;
+        Request reqPred = new Request(this, pred.getPort());
+        reqPred.sendRequest("LEAVE", pred);
+        Request reqSucc = new Request(this, succ.getPort());
+        reqSucc.sendRequest("LEAVE", succ);
+        
     }
 
     /**
