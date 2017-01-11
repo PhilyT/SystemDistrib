@@ -40,6 +40,7 @@
                             <mainClass>com.m1miageprojet.chord.ChatApp</mainClass>
                         </manifest>
                     </archive>
+                    <outputDirectory>./</outputDirectory>
                 </configuration>
             </plugin>
         </plugins>
