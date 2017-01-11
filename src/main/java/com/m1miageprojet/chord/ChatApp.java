@@ -77,7 +77,7 @@ public class ChatApp {
                             System.err.println("commande introuvable.");
                     }
                 }
-            }
+               }
             sc.close();
 
         } catch (NumberFormatException | NullPointerException e) {
