@@ -96,5 +96,6 @@ public class ChatApp {
         } catch (IOException | InterruptedException ex) {
             Logger.getLogger(ChatApp.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
     }
 }
