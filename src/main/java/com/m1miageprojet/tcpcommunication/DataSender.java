@@ -30,7 +30,7 @@ public class DataSender extends Thread {
     public void run() {
 
         try {
-
+        	Thread.sleep(200);
             Socket socket = new Socket(ip, port);
 
             socket.getOutputStream().write(data);
@@ -39,7 +39,9 @@ public class DataSender extends Thread {
 
         } catch (IOException ex) {
             System.err.println("connexion refusé sur le port " + port);
-        }
+        } catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
     }
 }

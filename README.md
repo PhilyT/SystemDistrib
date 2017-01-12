@@ -6,7 +6,7 @@ Le projet est en Java8
 
 Pour cloner le projet : 
 ```
-git clone https://github.com/PhilyT/RobotWar.git
+git clone https://github.com/PhilyT/SystemDistrib.git
 ```
 
 
@@ -57,13 +57,13 @@ La documentation se trouve dans le repertoire doc à  la racine.
 Rendu du projet  
   
 ###Contributeurs  
-Aichatou Traore 
-Estelle Rostan 
-Hamza Chahi 
-Marouane ML.   
+Aichatou Traore  
+Estelle Rostan  
+Hamza Chahi  
+Marouane ML.    
 Tom Phily     
   
-###Dirigà© par :  
+###Dirigé par :  
 Andréa Tettamanzi
 
 ##Sujet

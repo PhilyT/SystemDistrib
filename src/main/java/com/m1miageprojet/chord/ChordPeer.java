@@ -141,8 +141,19 @@ public class ChordPeer {
      * @param data is some data to communicate
      */
     public void sendData(byte[] data) {
-        Request req = new Request(this, myId);
+    	Request req = new Request(this);
         req.sendRequest(data, succ);
+    }
+    
+    
+    /**
+     * sends message to a given chord peer
+     * @param msg as a String
+     * @param sender
+     */
+    public void sendData(String msg, ChordPeer sender) {
+        Request req = new Request(this);
+        req.sendRequest(msg, sender, succ);
     }
 
     /**
@@ -154,6 +165,25 @@ public class ChordPeer {
         // ChordPeer destinationPeer = findkey(key);
         ConnexionListener listener = new ConnexionListener(this);
         listener.listen(req);
+    }
+    
+    
+    /**
+     * forward the message if peer is not expe
+     * @param msg as a string
+     * @param expe as the sender
+     */
+    public void forwardMessage(String msg, ChordPeer expe) {
+    	if(!equals(expe))
+    	{
+    		sendData(msg, expe);
+    	}
+    }
+    
+    @Override
+    public boolean equals(Object expe)
+    {
+    	return ((ChordPeer)expe).getMyId() == this.getMyId();
     }
 
     /**

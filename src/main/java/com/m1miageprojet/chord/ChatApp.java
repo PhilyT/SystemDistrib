@@ -25,7 +25,7 @@ public class ChatApp {
             ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
 
             peerN.setMyId(Integer.parseInt(keys));
-            Request req = new Request(peerN, peerN.getPort());
+            Request req = new Request(peerN);
             peerN.runListener(req);
 
             if (!portd.isEmpty()) {
@@ -59,7 +59,7 @@ public class ChatApp {
                             System.out.println("chatter :)");
 
                             while (!(line = sc.nextLine()).equals("\n")) {
-                                if (line != "-c") {
+                                if (!line.equals("-c")) {
                                     String data = peerN.getMyId() + " >> " + line;
                                     peerN.sendData(data.getBytes());
                                 }

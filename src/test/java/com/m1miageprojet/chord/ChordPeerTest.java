@@ -57,8 +57,8 @@ public class ChordPeerTest extends TestCase {
 
 		c1 = new ChordPeer(101, 2000);
 		c2 = new ChordPeer(101, 4000);
-		Request req1 = new Request(c1, c1.getPort());
-		Request req2 = new Request(c2, c2.getPort());
+		Request req1 = new Request(c1);
+		Request req2 = new Request(c2);
 		c1.runListener(req1);
 		c2.runListener(req2);
 		Random rand = new Random();
