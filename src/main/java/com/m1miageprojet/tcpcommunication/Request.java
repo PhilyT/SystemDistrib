@@ -31,15 +31,15 @@ public class Request {
 		} catch (JSONException e1) {
 			jsonReq = new JSONObject();
 			try {
-				jsonReq.put("expe", sender.toJSON(1));
-				jsonReq.put("dest", distPeer.toJSON(1));
-				if ("JOIN".equals(req)) {
-					jsonReq.put("req", "JOIN");					
-				} else if ("LEAVE".equals(req)) {
-					jsonReq.put("req", "LEAVE");
-					System.out.println("Requete: le pair " + peer.getMyId() + " va quitter le Chord");
-					peer.leaveChord();
-				}
+                                jsonReq.put("expe", sender.toJSON(1));
+                                jsonReq.put("dest", distPeer.toJSON(1));
+                                if ("JOIN".equals(req)) {
+                                        jsonReq.put("req", "JOIN");					
+                                } else if ("LEAVE".equals(req)) {
+                                        jsonReq.put("req", "LEAVE");
+                                        System.out.println("Requete: le pair " + peer.getMyId() + " va quitter le Chord");
+                                        peer.leaveChord();
+                                }
 				else if ("REP_JOIN".equals(req))
 				{
 					jsonReq.put("req", "REP_JOIN");
@@ -73,8 +73,6 @@ public class Request {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
-                // join en local
-                peer.joinChord(distPeer);
 	}
 
 	public void processRequest(String req) {
