@@ -73,6 +73,8 @@ public class Request {
 		} catch (JSONException e) {
 			e.printStackTrace();
 		}
+                // join en local
+                peer.joinChord(distPeer);
 	}
 
 	public void processRequest(String req) {
