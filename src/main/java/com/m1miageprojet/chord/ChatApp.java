@@ -59,6 +59,10 @@ public class ChatApp {
                             System.out.println("chatter :)");
 
                             while (!(line = sc.nextLine()).equals("\n")) {
+                                if (line.equals("-q")) {
+                                    System.out.println("sortir du chat ..");
+                                    break;
+                                }
                                 if (!line.equals("-c")) {
                                     String data = peerN.getMyId() + " >> " + line;
                                     peerN.sendData(data.getBytes());
@@ -66,10 +70,6 @@ public class ChatApp {
                                 if (line.equals("cls")) {
                                     cleanScreen();
                                     System.out.println("Options:\n\tcls:effacer l'ecran\n\t-Q: sortir de cette conversation");
-                                }
-                                if (line.equals("-q")) {
-                                    System.out.println("sortir du chat ..");
-                                    break;
                                 }
                             }
                             break;
