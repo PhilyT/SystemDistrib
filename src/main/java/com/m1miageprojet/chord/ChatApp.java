@@ -92,7 +92,12 @@ public class ChatApp {
                         	}
                         	break;
                         case "-s":
-                        	
+                        	System.out.println("clee du salon a rejoindre");
+                        	 String cleeSalon = sc.nextLine();
+                        	 
+                        	 
+                        	peerN.getGestionSalon().joinChatRoom(Integer.parseInt(cleeSalon),peerN);
+                        	req.sendRequest("JOIN_SALON", peerN.getSucc());
 
                         default:
                             System.err.println("commande introuvable.");

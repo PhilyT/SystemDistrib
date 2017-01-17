@@ -48,6 +48,7 @@ public class Request {
 					jsonReq.put("salons", peer.getGestionSalon().toJSON());
 					jsonReq.put("req", "REP_JOIN");
 				}
+				
 			} catch (JSONException e2) {
 				e2.printStackTrace();
 			}
@@ -119,6 +120,11 @@ public class Request {
 						msgByteArray[i] = Byte.parseByte(jsonByteArray.getString(i));
 					}
 					System.out.println(new String(msgByteArray));
+				}
+				else if(reqName.equals("JOIN_SALON")){
+					
+					
+					
 				}
 				peer.forwardMessage(req, expe);
 			} else if (reqName.equals("REP_JOIN")) {
