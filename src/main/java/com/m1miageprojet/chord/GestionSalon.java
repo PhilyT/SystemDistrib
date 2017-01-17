@@ -1,84 +1,95 @@
 package com.m1miageprojet.chord;
 
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class GestionSalon {
 
-	private ArrayList<ChatRoom> salles;
-    private ArrayList<Integer> idSalles;
+	private Hashtable<Integer, ChatRoom> salles;
+	private ChordPeer peer;
 
-    public GestionSalon() {
-        this.salles = new ArrayList<ChatRoom>();
-        this.idSalles = new ArrayList<Integer>();
+	public GestionSalon(ChordPeer peer) {
 
-    }
+		this.salles = new Hashtable<>();
+		this.peer= peer;
 
-    public ArrayList<Integer> getChatRoomList() {
-        return idSalles;
-    }
+	}
 
-    public void joinChatRoom(int chatKey, ChordPeer newNoeud) {
-        if (!salles.isEmpty() && !idSalles.isEmpty()) {
+	public Hashtable<Integer, ChatRoom> getChatRoomList() {
+		return salles;
+	}
 
-            for (int i = 0; i < idSalles.size(); i++) {
-                if (idSalles.get(i).equals((Integer) chatKey) && salles.get(i).getId() == chatKey) {
+	public void joinChatRoom(int chatKey, ChordPeer newNoeud) {
+		if (salles.containsKey(chatKey)) {
 
-                    salles.get(i).getNoeuds().add(newNoeud);
-                } else {
-                    salles.add(new ChatRoom(newNoeud, chatKey));
-                    idSalles.add((Integer) chatKey);
-                }
-            }
+			salles.get(chatKey).getNoeuds().add(newNoeud);
+		} else {
+			System.out.println("la salle nexiste pas il faut la cree");
 
-        } else {
-            System.out.println("Nouveau salon");
-        	salles.add(new ChatRoom(newNoeud, chatKey));
-            idSalles.add((Integer) chatKey);
-        	
-        }
+		}
 
-    }
+	}
 
-    public void sendToChatRoom(String s, int chatKey, ChordPeer noeud) {
-        if (!idSalles.isEmpty()) {
-            for (int i = 0; i < idSalles.size(); i++) {
-                if (idSalles.get(i) == (Integer) chatKey && salles.get(i).getId() == chatKey) {
-                    salles.get(i).getMessages().add(s);
+	public void creatChatRoom(ChordPeer noeud, int keyChatRoom) {
+		ChatRoom newChat = new ChatRoom(noeud, keyChatRoom);
+		salles.put( keyChatRoom, newChat);
 
-                } else {
-                    ChatRoom newSalle = new ChatRoom(noeud, chatKey);
-                    newSalle.getMessages().add(s);
-                    salles.add(newSalle);
-                    idSalles.add((Integer) chatKey);
-                }
-            }
+	}
 
-        }
-    }
+	public void sendToChatRoom(String s, int chatKey, ChordPeer noeud) {
+		if(salles.containsKey(chatKey)){
+			if (salles.get(chatKey).getNoeuds().contains(noeud)) {
+				salles.get(chatKey).getMessages().add(s);
 
-    public String readChatRoom(int chatKey) {
-        String s = "";
-        if (!idSalles.isEmpty()) {
-            for (int i = 0; i < idSalles.size(); i++) {
-                if (idSalles.get(i) == (Integer) chatKey && salles.get(i).getId() == chatKey) {
-                    if (!salles.get(i).getMessages().isEmpty()) {
-                        for (int j = 0; j < salles.get(i).getMessages().size(); j++) {
-                            s += salles.get(i).getMessages().get(j);
-                        }
+			}
+			else{
+				System.out.println("rejoins le salon pou pouvoir envoyer ton message");
+			}
+			
+		}
+		else
+			System.out.println("le salon nexiste pas");
+		
+		
+		
 
-                    }
-                } else {
-                    System.out.println("salle inexistant");
-                }
+	}
 
-            }
+	public ArrayList<String> readChatRoom(int chatKey) {
+		 ArrayList<String>s = new  ArrayList<String>();
+		if(salles.containsKey(chatKey)){
+			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
+				s=salles.get(chatKey).getMessages();
+			}
+			else
+				System.out.println("rejoins le salon pou pouvoir lir les messages");
+			
+		}
+		else
+			System.out.println("le salon nexiste pas");
+			
+		
+			
+		return s;
+	}
+	public String readlastMessage(int chatKey) {
+		 String s = null;
+		if(salles.containsKey(chatKey)){
+			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
+				s=salles.get(chatKey).getMessages().get(salles.get(chatKey).getMessages().size()-1);
+			}
+			else
+				System.out.println("rejoins le salon pou pouvoir lir les messages");
+			
+		}
+		else
+			System.out.println("le salon nexiste pas");
+			
+		
+			
+		return s;
+	}
 
-        }
-
-        return s;
-    }
-    public ArrayList<ChatRoom> getChatRoom(){
-    	return this.salles;
-    }
+	
 
 }
