@@ -1,7 +1,9 @@
 package com.m1miageprojet.chord;
 
+import java.util.Hashtable;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
+import java.util.Set;
 
 import com.m1miageprojet.tcpcommunication.Request;
 import java.io.IOException;
@@ -60,6 +62,7 @@ public class ChatApp {
 
                             //start chatting ..
                             System.out.println("chatter :)");
+                            
 
                             while (!(line = sc.nextLine()).equals("\n")) {
                                 if (line.equals("-q")) {
@@ -81,6 +84,12 @@ public class ChatApp {
                             cleanScreen();
                             System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter");
                             break;
+                        case "-ls":
+                        	Hashtable<Integer, ChatRoom> listeSalons=  peerN.getGestionSalon().getChatRoomList();
+                        	Set<Integer> keyss = listeSalons.keySet();//liste des id dans le hastable
+                        	for(Integer id:keyss){
+                        		System.out.println("salon  de cle :"+id);
+                        	}
 
                         default:
                             System.err.println("commande introuvable.");

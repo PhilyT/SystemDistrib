@@ -15,6 +15,8 @@ public class GestionSalon {
 	public GestionSalon(ChordPeer peer) {
 
 		this.salles = new Hashtable<>();
+		String s=""+peer.getMyId()+peer.getPort();
+		creatChatRoom(peer, Integer.parseInt(s));
 		this.peer = peer;
 
 	}
