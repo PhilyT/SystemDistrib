@@ -18,7 +18,7 @@ public class ChordPeer {
     private ChordPeer succ;
     private ChordPeer pred;
     private int maxKeyValue;
-
+    private GestionSalon gestionSalon ;
     /**
      * Constructor for the Main Peer
      *
@@ -36,6 +36,7 @@ public class ChordPeer {
         this.myId = new Random().nextInt(maxKeyValue);
         this.succ = this;
         this.pred = this;
+        this.setGestionSalon(new GestionSalon(this));
     }
 
     /**
@@ -260,6 +261,20 @@ public class ChordPeer {
     }
 
     /**
+	 * @return the gestionSalon
+	 */
+	public GestionSalon getGestionSalon() {
+		return gestionSalon;
+	}
+
+	/**
+	 * @param gestionSalon the gestionSalon to set
+	 */
+	public void setGestionSalon(GestionSalon gestionSalon) {
+		this.gestionSalon = gestionSalon;
+	}
+
+	/**
      * @return the className with value of myId
      */
     @Override
