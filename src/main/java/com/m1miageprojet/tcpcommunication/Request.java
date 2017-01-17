@@ -37,8 +37,8 @@ public class Request {
                                         jsonReq.put("req", "JOIN");					
                                 } else if ("LEAVE".equals(req)) {
                                         jsonReq.put("req", "LEAVE");
-                                        System.out.println("Requete: le pair " + peer.getMyId() + " va quitter le Chord");
-                                        peer.leaveChord();
+                                        System.out.println("Requete: quitter le Chord ..");
+                                        
                                 }
 				else if ("REP_JOIN".equals(req))
 				{
@@ -90,8 +90,20 @@ public class Request {
 					}
 					expe.joinChord(peer);
 					System.out.println("un peer vient de joindre le Chord avec l'Id: " + expe.getMyId());
-				} else if (reqName.equals("LEAVE")) {
-					System.out.println("un peer " + expe.getMyId() + " vient de quitter le Chord");
+				} else if (reqName.equals("LEAVE")){
+                                        
+                                        System.out.println("un peer " + expe.getMyId() + " vient de quitter le Chord");
+                                        if(!peer.equals(expe) ){
+                                            if(expe.equals(peer.getSucc())){
+                                                System.out.println("changer mon succ en " + expe.getSucc());
+                                                peer.setSucc(expe.getSucc());
+                                            }else if(expe.equals(peer.getPred())){
+                                                System.out.println("changer mon Pred en " + expe.getPred());
+                                                peer.setPred(expe.getPred());
+                                            }
+                                        }else{
+                                            //il faut arreter la boucle car on a atteint le cercle
+                                        }
 				}
 				else if (reqName.equals("chat")){
 					JSONArray jsonByteArray = jsonReq.getJSONArray("message");

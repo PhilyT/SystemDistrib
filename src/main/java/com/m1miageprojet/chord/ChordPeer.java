@@ -131,8 +131,11 @@ public class ChordPeer {
      * leaves the chord
      */
     public void leaveChord() {
-        succ.pred = this.pred;
-        pred.succ = this.succ;
+        //succ.pred = this.pred;
+        //pred.succ = this.succ;
+        //notfier : LEAVE CHORD
+        Request req = new Request(this);
+        req.sendRequest("LEAVE", succ);
     }
 
     /**

@@ -38,15 +38,18 @@ public class ChatApp {
                 req.sendRequest("JOIN", dest);
             }
 
-            System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter");
+            System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter le chord\n\texit: Sortir de l'application");
             while (!(line = sc.nextLine()).equals("\n")) {
                 if (!line.trim().isEmpty()) {
                     switch (line.toLowerCase()) {
-                        case "-q":
-
-                            //close all kind of listener or thread
+                        case "exit":
                             System.out.println("sortir de l'application");
                             System.exit(0);
+                        case "-q":
+                            //close all kind of listener or thread
+                            peerN.leaveChord();
+                            break;
+                            
                         case "-i":
 
                             //show chordPeer infos
