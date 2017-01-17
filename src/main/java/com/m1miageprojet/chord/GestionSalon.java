@@ -98,7 +98,7 @@ public class GestionSalon {
 		return s;
 	}
 
-	public JSONObject etatSalon() {
+	public JSONObject toJSON() {
 
 		JSONObject json = new JSONObject();
     	try 
