@@ -120,11 +120,11 @@ public class ChordPeerTest extends TestCase {
 	/**
 	 * test si les neuds quitte bien le reseau
 	 */
-	public void testLeaveChord() {
+	/*public void testLeaveChord() {
 		
 		c2.joinChord(c1);
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());
-	}
+	}*/
 }
