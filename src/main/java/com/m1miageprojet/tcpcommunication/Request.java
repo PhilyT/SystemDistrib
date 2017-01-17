@@ -54,6 +54,27 @@ public class Request {
 		}
 		ds.send(jsonReq.toString().getBytes(), distPeer.getIp(), distPeer.getPort());
 	}
+	
+	/**
+	 * 
+	 * @param req
+	 * @param distPeer
+	 * @param keyChatRoom
+	 */
+	public void sendRequest(String req, ChordPeer distPeer, int keyChatRoom) {
+		DataSender ds = new DataSender();
+		JSONObject jsonReq = new JSONObject();
+		try {
+			jsonReq.put("dest", distPeer.toJSON(1));
+			if ("JOIN_SALON".equals(req)) {
+				jsonReq.put("keyChatRoom", keyChatRoom);
+				jsonReq.put("req", "JOIN_SALON");
+			} 
+		} catch (JSONException e2) {
+			e2.printStackTrace();
+		}
+		ds.send(jsonReq.toString().getBytes(), distPeer.getIp(), distPeer.getPort());
+	}
 
 	/**
 	 * Send a message to a recipient
@@ -88,6 +109,7 @@ public class Request {
 			ChordPeer dest = new ChordPeer(jsonReq.getJSONObject("dest"));
 			String reqName = jsonReq.getString("req");
 			if (!reqName.equals("REP_JOIN") && !peer.equals(expe)) {
+				peer.forwardMessage(req, expe);
 				if (reqName.equals("JOIN")) {
 					
 					ChatRoom chat = new ChatRoom (jsonReq.getJSONObject("salons").getJSONArray("salons").getJSONObject(0));//on recupere le salon crer par lexp
@@ -120,7 +142,7 @@ public class Request {
 					}
 					System.out.println(new String(msgByteArray));
 				}
-				peer.forwardMessage(req, expe);
+				
 			} else if (reqName.equals("REP_JOIN")) {
 
 				System.out.println("Requete: jointure du pair " + peer.getMyId());
