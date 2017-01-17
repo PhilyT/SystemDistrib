@@ -90,6 +90,9 @@ public class ChatApp {
                         	for(Integer id:keyss){
                         		System.out.println("salon  de cle :"+id);
                         	}
+                        	break;
+                        case "-s":
+                        	
 
                         default:
                             System.err.println("commande introuvable.");
