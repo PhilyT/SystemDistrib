@@ -45,11 +45,12 @@ public class ChatApp {
                 if (!line.trim().isEmpty()) {
                     switch (line.toLowerCase()) {
                         case "exit":
+                        	req.sendRequest("LEAVE", peerN.getSucc());
                             System.out.println("sortir de l'application");
                             System.exit(0);
                         case "-q":
                             //close all kind of listener or thread
-                            peerN.leaveChord();
+                        	req.sendRequest("LEAVE", peerN.getSucc());
                             break;
                             
                         case "-i":
@@ -85,7 +86,7 @@ public class ChatApp {
                             System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter");
                             break;
                         case "-ls":
-                        	Hashtable<Integer, ChatRoom> listeSalons=  peerN.getGestionSalon().getChatRoomList();
+                        	Hashtable<Integer, ChatRoom> listeSalons =  peerN.getGestionSalon().getChatRoomList();
                         	Set<Integer> keyss = listeSalons.keySet();//liste des id dans le hastable
                         	for(Integer id:keyss){
                         		System.out.println("salon  de cle :"+id);
@@ -93,12 +94,12 @@ public class ChatApp {
                         	break;
                         case "-s":
                         	System.out.println("clee du salon a rejoindre");
-                        	 String cleeSalon = sc.nextLine();
+                        	String cleeSalon = sc.nextLine();
                         	 
                         	 
                         	peerN.getGestionSalon().joinChatRoom(Integer.parseInt(cleeSalon),peerN);
                         	req.sendRequest("JOIN_SALON", peerN.getSucc());
-
+                        	break;
                         default:
                             System.err.println("commande introuvable.");
                     }

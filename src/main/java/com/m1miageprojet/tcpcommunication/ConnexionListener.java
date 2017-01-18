@@ -57,6 +57,8 @@ public class ConnexionListener extends Thread {
 
         } catch (IOException ex) {
             System.err.println("Erreur : lecture de données echoué.");
+        } catch(NullPointerException e){
+        	System.err.println("Impossible de mettre le port sur ecoute");
         }
     }
 }

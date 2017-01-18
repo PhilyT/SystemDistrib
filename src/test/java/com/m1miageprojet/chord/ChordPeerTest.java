@@ -4,8 +4,6 @@ import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.Random;
 
-import com.m1miageprojet.tcpcommunication.Request;
-
 import junit.framework.TestCase;
 
 /**
@@ -57,10 +55,7 @@ public class ChordPeerTest extends TestCase {
 
 		c1 = new ChordPeer(101, 2000);
 		c2 = new ChordPeer(101, 4000);
-		Request req1 = new Request(c1);
-		Request req2 = new Request(c2);
-		c1.runListener(req1);
-		c2.runListener(req2);
+
 		Random rand = new Random();
 		while (c1.getMyId() == c2.getMyId()) {
 			c2.setMyId(rand.nextInt(101));
@@ -120,11 +115,24 @@ public class ChordPeerTest extends TestCase {
 	/**
 	 * test si les neuds quitte bien le reseau
 	 */
-	/*public void testLeaveChord() {
+	public void testLeaveChord() {
 		
 		c2.joinChord(c1);
 		c2.leaveChord();
 		assertEquals(c1, c1.getPred());
 		assertEquals(c1, c1.getSucc());
-	}*/
+	}
+	
+	/**
+	 * test si le precedent et le successeur est correctement affecter après leave Chord
+	 */
+	public void testPrecedentEtSuccesseurArpesLeaveChord(){
+		chord.get(2).leaveChord();
+		assertEquals(chord.get(3).getPred(),chord.get(1)); 
+		assertEquals(chord.get(3).getSucc(),chord.get(0));
+		assertEquals(chord.get(1).getPred(),chord.get(0)); 
+		assertEquals(chord.get(1).getSucc(),chord.get(3));
+		assertEquals(chord.get(0).getPred(),chord.get(3)); 
+		assertEquals(chord.get(0).getSucc(),chord.get(1));
+	}
 }

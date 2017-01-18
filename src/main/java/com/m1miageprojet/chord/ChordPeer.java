@@ -44,7 +44,7 @@ public class ChordPeer {
         for (int i = 0; i < finger.length; i++) {
             finger[i] = new FingerTable();
             finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
-            finger[i].setIp(findkey(finger[i].getId()).getIp());
+            //finger[i].setIp(findkey(finger[i].getId()).getIp());
         }
     }
 
@@ -67,7 +67,7 @@ public class ChordPeer {
         for (int i = 0; i < finger.length; i++) {
             finger[i] = new FingerTable();
             finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
-            finger[i].setIp(findkey(finger[i].getId()).getIp());
+            ///finger[i].setIp(findkey(finger[i].getId()).getIp());
         }
     }
 
@@ -115,10 +115,8 @@ public class ChordPeer {
             return this;
         } else if (predecessorId > this.myId && key <= this.myId) {
             return this;
-        } else if (predecessorId > this.myId && key >= predecessorId) {
+        } else if (predecessorId > this.myId && key > predecessorId) {
             return this;
-        } else if (succ.myId < this.myId) {
-            return succ;
         } else {
             return succ.findkey(key);
         }
@@ -143,11 +141,10 @@ public class ChordPeer {
      * leaves the chord
      */
     public void leaveChord() {
-        // succ.pred = this.pred;
-        // pred.succ = this.succ;
-        // notfier : LEAVE CHORD
-        Request req = new Request(this);
-        req.sendRequest("LEAVE", succ);
+        succ.pred = this.pred;
+        pred.succ = this.succ;
+        this.pred = this;
+        this.succ = this;
     }
 
     /**
@@ -162,7 +159,7 @@ public class ChordPeer {
     }
 
     /**
-     * sends message to a given chord peer
+     * sends message by a given chord peer
      * 
      * @param msg
      *            as a String
