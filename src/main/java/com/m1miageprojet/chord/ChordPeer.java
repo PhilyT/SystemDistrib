@@ -56,6 +56,7 @@ public class ChordPeer {
         this.myId = new Random().nextInt(maxKeyValue);
         this.succ = this;
         this.pred = this;
+        finger = new FingerTable[(int) Math.log(maxKeyValue)];
     }
 
     /**
