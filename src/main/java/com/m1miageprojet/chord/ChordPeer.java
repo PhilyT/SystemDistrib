@@ -40,6 +40,12 @@ public class ChordPeer {
         this.pred = this;
         this.setGestionSalon(new GestionSalon(this));
         finger = new FingerTable[(int) Math.log(maxKeyValue)];
+
+        for (int i = 0; i < finger.length; i++) {
+            finger[i] = new FingerTable();
+            finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
+            finger[i].setIp(findkey(finger[i].getId()).getIp());
+        }
     }
 
     /**
@@ -57,6 +63,12 @@ public class ChordPeer {
         this.succ = this;
         this.pred = this;
         finger = new FingerTable[(int) Math.log(maxKeyValue)];
+
+        for (int i = 0; i < finger.length; i++) {
+            finger[i] = new FingerTable();
+            finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
+            finger[i].setIp(findkey(finger[i].getId()).getIp());
+        }
     }
 
     /**
