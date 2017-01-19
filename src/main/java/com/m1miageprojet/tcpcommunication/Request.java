@@ -57,6 +57,16 @@ public class Request {
 					jsonReq.put("req", "REP_JOIN");
 				}
 				
+				else if("SMS_DANS_SALON".equals(req)){
+					jsonReq.put("messages", peer.getGestionSalon().toJSON());
+					jsonReq.put("req", "SMS_DANS_SALON");
+					
+				}
+				else if("CREAT_SALON".equals(req)){
+					jsonReq.put("creation", peer.getGestionSalon().toJSON());
+					jsonReq.put("req", "CREAT_SALON");
+					
+				}
 			} catch (JSONException e2) {
 				e2.printStackTrace();
 			}
@@ -152,7 +162,24 @@ public class Request {
 				}
 
 				else if(reqName.equals("JOIN_SALON")){
+					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+				
 					
+				}
+				else if(reqName.equals("SMS_DANS_SALON")){
+					//peer.joinChord(expe);
+					//peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+					System.out.println("nouveau message dans le salon");
+					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+					
+					
+				}
+				else if(reqName.equals("CREAT_SALON")){
+					//peer.joinChord(expe);
+					//peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+					
+					System.out.println("creation nouvelle salle");
+					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
 					
 					
 				}
@@ -161,6 +188,7 @@ public class Request {
 				peer.joinChord(expe);
 				peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
 			}
+			
 
 		} catch (JSONException e) {
 			e.printStackTrace();
