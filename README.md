@@ -11,7 +11,7 @@ git clone https://github.com/PhilyT/SystemDistrib.git
 
 
 
->Pour installer et tout lancer :
+>Pour tout installer et lancer l'annuaire :
 
 ######Sous linux : 
 ```
@@ -32,6 +32,14 @@ mvn clean
 ```
 ```
 mvn package
+```
+Pour lancé l'annuaire sans installer : 
+```
+java -jar annuaire-jar-with-dependencies.jar
+```
+Pour lancé le chat : 
+```
+java -jar chat-jar-with-dependencies.jar
 ```
   
 >Utilisation de l'application :

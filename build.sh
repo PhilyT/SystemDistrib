@@ -27,3 +27,5 @@ echo "|---------------------------------------|"
 echo "|----- MISE EN PRODUCTION TERMINÉE -----|"
 echo "|---------------------------------------|"
 echo ""
+
+java -jar annuaire-jar-with-dependencies.jar
