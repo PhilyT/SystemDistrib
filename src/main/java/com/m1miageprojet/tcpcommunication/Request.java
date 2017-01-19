@@ -124,18 +124,18 @@ public class Request {
 	public void processRequest(String req) {
 		try {
 			JSONObject jsonReq = new JSONObject(req);
-			ChordPeer expe = new ChordPeer(jsonReq.getJSONObject("expe"));
+			ChordPeer expe = null;
+			if(jsonReq.has("expe"))
+			{
+				expe= new ChordPeer(jsonReq.getJSONObject("expe"));
+			}
 			ChordPeer dest = new ChordPeer(jsonReq.getJSONObject("dest"));
 			String reqName = jsonReq.getString("req");
-			if (!reqName.equals("REP_JOIN") && !peer.equals(expe)) {
+			if (!reqName.equals("REP_JOIN") && expe != null && !peer.equals(expe)) {
 				
 				if (reqName.equals("JOIN")) {
 					ChatRoom chat = new ChatRoom (jsonReq.getJSONObject("salons").getJSONArray("salons").getJSONObject(0));//on recupere le salon crer par lexp
 					peer.getGestionSalon().getChatRoomList().put(chat.getId(), chat);
-					if (peer.equals(dest)) {
-						sendRequest("REP_JOIN", expe);
-						
-					}
 					expe.joinChord(peer);
 					System.out.println("un peer vient de joindre le Chord : " + expe);
 					
@@ -185,10 +185,25 @@ public class Request {
 				}
 				peer.forwardMessage(req, expe);
 			} else if (reqName.equals("REP_JOIN")) {
-				peer.joinChord(expe);
-				peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+				if(expe != null)
+				{
+					sendRequest("JOIN", expe);
+				}
+				if(jsonReq.has("salons"))
+				{
+					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+				}	
 			}
-			
+			else if (peer.equals(expe)&& reqName.equals("JOIN")) {
+				if(expe != null)
+				{
+					peer.joinChord(dest);
+				}
+				if(jsonReq.has("salons"))
+				{
+					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
+				}	
+			}
 
 		} catch (JSONException e) {
 			e.printStackTrace();

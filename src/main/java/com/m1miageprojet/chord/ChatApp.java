@@ -1,14 +1,14 @@
 package com.m1miageprojet.chord;
 
+import java.io.IOException;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
 import java.util.Set;
-
-import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import com.m1miageprojet.tcpcommunication.DataSender;
 import com.m1miageprojet.tcpcommunication.Request;
 
 public class ChatApp {
@@ -19,8 +19,6 @@ public class ChatApp {
 
 		System.out.print("def un port source: ");
 		String ports = sc.nextLine();
-		System.out.print("def un port destination (ne pas definir si il sagit du premier client): ");
-		String portd = sc.nextLine();
 		System.out.print("def un key source: ");
 		String keys = sc.nextLine();
 
@@ -31,15 +29,8 @@ public class ChatApp {
 			Request req = new Request(peerN);
 			peerN.runListener(req);
 
-			if (!portd.isEmpty()) {
-				System.out.print("def ip destination: ");
-				String ipd = sc.nextLine();
-				System.out.print("def un key destination: ");
-				String keyd = sc.nextLine();
-				ChordPeer dest = new ChordPeer(101, ipd, Integer.parseInt(portd));
-				dest.setMyId(Integer.parseInt(keyd));
-				req.sendRequest("JOIN", dest);
-			}
+			DataSender d = new DataSender();
+			d.send(peerN.toJSON(peerN,  true).toString().getBytes(),"localhost", 2000);
 
 			System.out.println(
 					"Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter le chord\n\texit: Sortir de l'application");
