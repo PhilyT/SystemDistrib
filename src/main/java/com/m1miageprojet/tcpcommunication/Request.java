@@ -130,6 +130,10 @@ public class Request {
 					System.out.println("un peer vient de joindre le Chord : " + expe);
 					
 				} else if (reqName.equals("LEAVE")) {
+					System.out.println("peer :" + peer);
+					System.out.println("succ :" + peer.getSucc());
+					System.out.println("pred :" + peer.getPred());
+					System.out.println("suc suc suc :" + peer.getSucc().getSucc().getSucc());
 					if(peer.equals(dest) && !peer.getPred().equals(expe))
 					{
 						return;//Casse la boucle infini d'envoi de messages

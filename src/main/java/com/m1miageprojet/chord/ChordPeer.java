@@ -21,6 +21,7 @@ public class ChordPeer {
     private int maxKeyValue;
     private GestionSalon gestionSalon;
     private FingerTable[] finger;
+    private ConnexionListener listener;
 
     /**
      * Constructor for the Main Peer
@@ -172,7 +173,7 @@ public class ChordPeer {
      */
     public void joinChord(ChordPeer peer) {
     	this.setSucc(peer.findkey(getMyId()));
-        this.setPred(succ.pred);
+        this.setPred(peer.findkey(succ.getPred().getMyId()));
         pred.setSucc(this);
         succ.setPred(this);
     }
@@ -217,8 +218,13 @@ public class ChordPeer {
      */
     public void runListener(Request req) {
         // ChordPeer destinationPeer = findkey(key);
-        ConnexionListener listener = new ConnexionListener(this);
+        listener = new ConnexionListener(this);
         listener.listen(req);
+    }
+    
+    public void stopListener()
+    {
+    	listener.stopConnection();
     }
 
     /**

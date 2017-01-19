@@ -14,6 +14,7 @@ public class ConnexionListener extends Thread {
     private ServerSocket serverSocket;
     private ChordPeer peer;
     private Request req;
+    private boolean running;
 
     /**
      * constructor
@@ -41,10 +42,10 @@ public class ConnexionListener extends Thread {
     public void run() {
 
         Socket clientSocket;
-
+        running = true;
         try {
 
-            while ((clientSocket = serverSocket.accept()) != null) {
+            while ((clientSocket = serverSocket.accept()) != null && running) {
 
                 InputStream is = clientSocket.getInputStream();
                 BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
@@ -54,11 +55,24 @@ public class ConnexionListener extends Thread {
                 }
 
             }
+            
 
         } catch (IOException ex) {
-            System.err.println("Erreur : lecture de données echoué.");
+        	System.out.println("stop lecture");
         } catch(NullPointerException e){
         	System.err.println("Impossible de mettre le port sur ecoute");
         }
+    }
+    
+    public void stopConnection()
+    {
+    	try {
+			running = false;
+			serverSocket.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+    	
     }
 }
