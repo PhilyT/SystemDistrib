@@ -86,9 +86,9 @@ public class ChatApp {
                             System.out.println("Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter");
                             break;
                         case "-ls":
-                        	Hashtable<Integer, ChatRoom> listeSalons =  peerN.getGestionSalon().getChatRoomList();
-                        	Set<Integer> keyss = listeSalons.keySet();//liste des id dans le hastable
-                        	for(Integer id:keyss){
+                        	Hashtable<Long, ChatRoom> listeSalons =  peerN.getGestionSalon().getChatRoomList();
+                        	Set<Long> keyss = listeSalons.keySet();//liste des id dans le hastable
+                        	for(Long id:keyss){
                         		System.out.println("salon  de cle :"+id);
                         	}
                         	break;

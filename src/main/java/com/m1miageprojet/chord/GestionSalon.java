@@ -9,7 +9,7 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class GestionSalon {
 
-	private Hashtable<Integer, ChatRoom> salles;
+	private Hashtable<Long, ChatRoom> salles;
 	private ChordPeer peer;
 
 	public GestionSalon(ChordPeer peer) {
@@ -21,14 +21,14 @@ public class GestionSalon {
 
 	}
 
-	public Hashtable<Integer, ChatRoom> getChatRoomList() {
+	public Hashtable<Long, ChatRoom> getChatRoomList() {
 		return salles;
 	}
 	
 	public void setChatRoom(JSONObject o){
 		try {
 			JSONArray json= o.getJSONArray("salons");
-			this.salles = new Hashtable<Integer,ChatRoom>();
+			this.salles = new Hashtable<Long,ChatRoom>();
 			for(int i=0; i<json.length();i++){
 				ChatRoom chat=new ChatRoom(json.getJSONObject(i));
 				salles.put(chat.getId(), chat);
@@ -52,7 +52,7 @@ public class GestionSalon {
 
 	}
 
-	public void creatChatRoom(ChordPeer noeud, int keyChatRoom) {
+	public void creatChatRoom(ChordPeer noeud, long keyChatRoom) {
 		ChatRoom newChat = new ChatRoom(noeud, keyChatRoom);
 		salles.put(keyChatRoom, newChat);
 
@@ -86,7 +86,7 @@ public class GestionSalon {
 		return s;
 	}
 
-	public String readlastMessage(int chatKey) {
+	public String readlastMessage(long chatKey) {
 		String s = null;
 		if (salles.containsKey(chatKey)) {
 			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
