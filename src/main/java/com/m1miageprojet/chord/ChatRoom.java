@@ -8,10 +8,10 @@ import org.codehaus.jettison.json.JSONObject;
 
 public class ChatRoom {
 	private ArrayList<ChordPeer> noeuds = new ArrayList<ChordPeer>();
-	private int id;
+	private long id;
 	private ArrayList<String> messages;
 
-	public ChatRoom(ChordPeer noeud, int id) {
+	public ChatRoom(ChordPeer noeud, long id) {
 		this.noeuds.add(noeud);
 		this.setId(id);
 		this.messages = new ArrayList<String>();
@@ -46,11 +46,11 @@ public class ChatRoom {
 		this.noeuds = noeuds;
 	}
 
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
 	}
 
