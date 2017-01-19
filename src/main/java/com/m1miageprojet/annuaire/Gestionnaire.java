@@ -5,11 +5,8 @@ import com.m1miageprojet.chord.ChordPeer;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
-import java.awt.print.Paper;
 import java.io.*;
-import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.ArrayList;
 
 
 public class Gestionnaire implements Runnable {
