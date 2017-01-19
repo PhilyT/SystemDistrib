@@ -127,6 +127,16 @@ public class ChatApp {
 
 						req.sendRequest("SMS_DANS_SALON", peerN.getSucc());
 						break;
+					case "redD":
+						System.out.println("lecture du dernier message dans un salon");
+						Scanner scann = new Scanner(System.in);
+						System.out.println(" saisissez la cle du salon a lire ");
+						long SalonKey = scann.nextLong();
+						peerN.getGestionSalon().readlastMessage(SalonKey);
+						break;
+						
+						
+						
 					default:
 						System.err.println("commande introuvable.");
 					}
