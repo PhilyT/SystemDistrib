@@ -14,16 +14,24 @@ public class Request {
 		this.peer = peer;
 	}
 
+	/**
+	 * Send a request to a recipient
+	 * @param req
+	 *            as a String
+	 * @param distPeer
+	 *            as the recipient
+	 */
 	public void sendRequest(String req, ChordPeer distPeer) {
 		sendRequest(req, peer, distPeer);
 	}
 
 	/**
-	 * Send a message to a recipient
+	 * Send a request to a recipient
 	 * 
 	 * @param req
 	 *            as a String
 	 * @param sender
+	 * 				as the sender
 	 * @param distPeer
 	 *            as the recipient
 	 */
@@ -35,8 +43,8 @@ public class Request {
 		} catch (JSONException e1) {
 			jsonReq = new JSONObject();
 			try {
-				jsonReq.put("expe", sender.toJSON(1));
-				jsonReq.put("dest", distPeer.toJSON(1));
+				jsonReq.put("expe", sender.toJSON(sender, true));
+				jsonReq.put("dest", distPeer.toJSON(distPeer, true));
 				if ("JOIN".equals(req)) {
 					jsonReq.put("salons", peer.getGestionSalon().toJSON());
 					jsonReq.put("req", "JOIN");
@@ -57,7 +65,7 @@ public class Request {
 	}
 	
 	/**
-	 * Send a message to a ChatRoom
+	 * Send a request to a ChatRoom
 	 * @param req
 	 * @param distPeer
 	 * @param keyChatRoom
@@ -66,7 +74,7 @@ public class Request {
 		DataSender ds = new DataSender();
 		JSONObject jsonReq = new JSONObject();
 		try {
-			jsonReq.put("dest", distPeer.toJSON(1));
+			jsonReq.put("dest", distPeer.toJSON(distPeer, true));
 			if ("JOIN_SALON".equals(req)) {
 				jsonReq.put("keyChatRoom", keyChatRoom);
 				jsonReq.put("req", "JOIN_SALON");
@@ -89,8 +97,8 @@ public class Request {
 		DataSender ds = new DataSender();
 		JSONObject jsonReq = new JSONObject();
 		try {
-			jsonReq.put("expe", peer.toJSON(1));
-			jsonReq.put("dest", distPeer.toJSON(1));
+			jsonReq.put("expe", peer.toJSON(peer, true));
+			jsonReq.put("dest", distPeer.toJSON(peer, true));
 			jsonReq.put("req", "chat");
 			JSONArray jsonByteArray = new JSONArray();
 			for (byte b : req) {
@@ -112,7 +120,6 @@ public class Request {
 			if (!reqName.equals("REP_JOIN") && !peer.equals(expe)) {
 				
 				if (reqName.equals("JOIN")) {
-					
 					ChatRoom chat = new ChatRoom (jsonReq.getJSONObject("salons").getJSONArray("salons").getJSONObject(0));//on recupere le salon crer par lexp
 					peer.getGestionSalon().getChatRoomList().put(chat.getId(), chat);
 					if (peer.equals(dest)) {
@@ -120,25 +127,15 @@ public class Request {
 						
 					}
 					expe.joinChord(peer);
-					System.out.println("un peer vient de joindre le Chord avec l'Id: " + expe.getMyId());
+					System.out.println("un peer vient de joindre le Chord : " + expe);
 					
 				} else if (reqName.equals("LEAVE")) {
-					if(peer.getMyId() == 78)
+					if(peer.equals(dest) && !peer.getPred().equals(expe))
 					{
-						System.out.println("avant leave chord");
-						System.out.println("pred : " + peer.getPred());
-						System.out.println("succ : " + peer.getSucc());
-						System.out.println(peer.findkey(expe.getMyId()));
-						System.out.println("pred de " + peer.findkey(expe.getMyId())+ " : " + peer.findkey(expe.getMyId()).getPred().getMyId());
+						return;//Casse la boucle infini d'envoi de messages
 					}
 					peer.findkey(expe.getMyId()).leaveChord();
-					if(peer.getMyId() == 78)
-					{
-						System.out.println("apres leave chord");
-						System.out.println("pred : " + peer.getPred());
-						System.out.println("succ : " + peer.getSucc());
-					}
-					System.out.println("un peer " + expe.getMyId() + " vient de quitter le Chord");
+					System.out.println("un peer " + expe + " vient de quitter le Chord");
 					
 				} else if (reqName.equals("chat")) {
 					
@@ -157,8 +154,6 @@ public class Request {
 				}
 				peer.forwardMessage(req, expe);
 			} else if (reqName.equals("REP_JOIN")) {
-
-				System.out.println("Requete: jointure du pair " + peer.getMyId());
 				peer.joinChord(expe);
 				peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
 			}

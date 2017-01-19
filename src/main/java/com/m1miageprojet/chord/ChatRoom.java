@@ -70,7 +70,7 @@ public class ChatRoom {
 			JSONArray noeudsJSON = new JSONArray();
 			JSONArray messagesJSON = new JSONArray();
 			for (ChordPeer c : noeuds) {
-				noeudsJSON.put(c.toJSON(0));
+				noeudsJSON.put(c.toJSON(c, true));
 			}
 			for (String s : messages) {
 				noeudsJSON.put(s);

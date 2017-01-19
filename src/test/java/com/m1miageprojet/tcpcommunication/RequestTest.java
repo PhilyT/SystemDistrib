@@ -3,19 +3,15 @@
  */
 package com.m1miageprojet.tcpcommunication;
 
-import static org.junit.Assert.*;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import com.m1miageprojet.chord.ChordPeer;
+
+import junit.framework.TestCase;
 
 /**
  * @author Tom Phily
  *
  */
-public class RequestTest {
+public class RequestTest extends TestCase{
 	ChordPeer c1;
 	ChordPeer c2;
 	ChordPeer c3;
@@ -28,7 +24,6 @@ public class RequestTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@Before
 	public void setUp() throws Exception {
 		c1 = new ChordPeer(101,3000);
 		c2 = new ChordPeer(101,3001);
@@ -47,7 +42,6 @@ public class RequestTest {
 	/**
 	 * @throws java.lang.Exception
 	 */
-	@After
 	public void tearDown() throws Exception {
 		c1 = null;
 		c2 = null;
@@ -59,36 +53,28 @@ public class RequestTest {
 		req4 = null;
 	}
 
-	@Test
 	public void testJointureASortieDuChord() throws InterruptedException {
 		c1.runListener(req1);
 		c2.runListener(req2);
 		c3.runListener(req3);
 		c4.runListener(req4);
-		
 		req2.sendRequest("JOIN", c1);
 		Thread.sleep(1000);
-
 		req3.sendRequest("JOIN", c1);
 		Thread.sleep(1000);
 		req4.sendRequest("JOIN", c1);
 		Thread.sleep(1000);
-
 		req2.sendRequest("LEAVE", c2.getSucc());
 		Thread.sleep(1000);
 		
-		assertEquals(c1.getPred(), c4);
-		System.out.println("test1 reussi");
-		assertEquals(c1.getSucc(), c3);
-		System.out.println("test2 reussi");
-		/*assertEquals(c3.getPred(), c1);
-		System.out.println("test3 reussi");
-		assertEquals(c3.getSucc(), c4);
-		System.out.println("test4 reussi");
-		assertEquals(c4.getPred(), c3);
-		System.out.println("test5 reussi");
-		assertEquals(c4.getSucc(), c1);
-		System.out.println("test6 reussi");*/
+		assertEquals(c3, c4.getPred());
+		assertEquals(c1, c4.getSucc());
+		assertEquals(c4, c3.getSucc());
+		assertEquals(c1, c3.getPred());
+		assertEquals(c4, c1.getPred());
+		assertEquals(c3, c1.getSucc());
+		
+		
 	}
 
 }

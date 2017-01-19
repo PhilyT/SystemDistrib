@@ -2,6 +2,7 @@ package com.m1miageprojet.chord;
 
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 import java.util.Random;
 
 import org.codehaus.jettison.json.JSONException;
@@ -78,25 +79,67 @@ public class ChordPeer {
      */
     public ChordPeer(JSONObject json) {
         try {
-            int profondeur = json.getInt("profondeur");
             this.ip = json.getString("ip");
             this.port = json.getInt("port");
             this.maxKeyValue = json.getInt("maxKeyValue");
             this.myId = json.getInt("key");
-            if (profondeur > 0) {
-                this.succ = new ChordPeer(json.getJSONObject("succ"));
-                this.pred = new ChordPeer(json.getJSONObject("pred"));
-                ;
-            } else {
-                this.succ = this;
-                this.pred = this;
+            if(json.has("succ") && json.has("pred") && json.getJSONObject("pred").getInt("key") == json.getJSONObject("succ").getInt("key"))
+        	{
+        		ChordPeer sameChordPeer = new ChordPeer(json.getJSONObject("succ"), this, this);
+        		this.succ = sameChordPeer;
+        		this.pred = sameChordPeer;
+        	}
+            else
+            {
+            	if (json.has("succ")) {
+                	
+                    this.succ = new ChordPeer(json.getJSONObject("succ"), this, this);
+                } else {
+                    this.succ = this;
+                }
+                if(json.has("pred")){
+                	this.pred = new ChordPeer(json.getJSONObject("pred"), this, this);
+                } else{
+                    this.pred = this;
+                }
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
     }
 
-    /**
+    private ChordPeer(JSONObject json, ChordPeer base, ChordPeer chordPeer) {
+    	try {
+            this.ip = json.getString("ip");
+            this.port = json.getInt("port");
+            this.maxKeyValue = json.getInt("maxKeyValue");
+            this.myId = json.getInt("key");
+            if (json.has("succ")) {
+            	if(json.getJSONObject("succ").getInt("key") == base.getMyId())
+            	{
+            		this.succ = base;
+            	}else{
+            		this.succ = new ChordPeer(json.getJSONObject("succ"), base, this);
+            	}
+            } else {
+                this.succ = chordPeer;
+            }
+            if(json.has("pred")){
+            	if(json.getJSONObject("pred").getInt("key") == base.getMyId())
+            	{
+            		this.pred = base;
+            	}else{
+            		this.pred = new ChordPeer(json.getJSONObject("pred"), base, this);
+            	}
+            } else{
+                this.pred = chordPeer;
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+	}
+
+	/**
      *
      * @param key
      * @return the ip's node responsible for the key
@@ -128,13 +171,10 @@ public class ChordPeer {
      * @param chordPeerHandle
      */
     public void joinChord(ChordPeer peer) {
-
-        ChordPeer successeur = peer.findkey(getMyId());
-        ChordPeer predecesseur = successeur.getPred();
-        successeur.setPred(this);
-        this.setPred(predecesseur);
+    	this.setSucc(peer.findkey(getMyId()));
+        this.setPred(succ.pred);
         pred.setSucc(this);
-        this.setSucc(successeur);
+        succ.setPred(this);
     }
 
     /**
@@ -143,8 +183,8 @@ public class ChordPeer {
     public void leaveChord() {
         succ.pred = this.pred;
         pred.succ = this.succ;
-        this.pred = this;
-        this.succ = this;
+        pred = this;
+        succ = this;
     }
 
     /**
@@ -295,26 +335,65 @@ public class ChordPeer {
      */
     @Override
     public String toString() {
-        return "ChordPeer [myId=" + myId + "]";
+        return "ChordPeer [myId=" + myId + "; succ=" + succ.getMyId() + "; pred=" + pred.getMyId() + "]";
     }
 
     /**
      * 
-     * @param peer's
-     *            profondeur
+     * @param chordPeerBase
      * @return JSONObject
      */
-    public JSONObject toJSON(int profondeur) {
+    public JSONObject toJSON(ChordPeer chordPeerBase, boolean b) {
+    	ArrayList<ChordPeer> chordPeersVisits = new ArrayList<ChordPeer>();
+    	chordPeersVisits.add(chordPeerBase);
         JSONObject json = new JSONObject();
         try {
             json.put("ip", getIp());
             json.put("port", getPort());
             json.put("key", getMyId());
-            json.put("profondeur", profondeur);
             json.put("maxKeyValue", maxKeyValue);
-            if (profondeur > 0) {
-                json.put("succ", succ.toJSON(profondeur - 1));
-                json.put("pred", pred.toJSON(profondeur - 1));
+            if(!succ.equals(this)&& !pred.equals(this)&& b)
+        	{
+        		json.put("succ", succ.toJSON(chordPeersVisits));
+        		chordPeersVisits.clear();
+        		chordPeersVisits.add(chordPeerBase);
+            	json.put("pred", pred.toJSON(chordPeersVisits));
+        	}
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return json;
+    }
+    
+    /**
+     * 
+     * @param chordPeersVisits as the list of ChordPeers have visited
+     * @return JSONObject
+     */
+    public JSONObject toJSON(ArrayList<ChordPeer> chordPeersVisits) {
+    	ArrayList<ChordPeer> iter = chordPeersVisits;
+    	iter.add(this);
+        JSONObject json = new JSONObject();
+        try {
+            json.put("ip", getIp());
+            json.put("port", getPort());
+            json.put("key", getMyId());
+            json.put("maxKeyValue", maxKeyValue);
+            if(!chordPeersVisits.contains(succ))
+        	{
+        		json.put("succ", succ.toJSON(iter));
+        	}
+            else if(chordPeersVisits.get(0).equals(succ))
+            {
+            	json.put("succ", succ.toJSON(succ, false));
+            }
+            if(!chordPeersVisits.contains(pred))
+        	{
+        		json.put("pred", pred.toJSON(iter));
+        	}
+            else if(chordPeersVisits.get(0).equals(pred))
+            {
+            	json.put("pred", pred.toJSON(pred, false));
             }
         } catch (JSONException e) {
             e.printStackTrace();

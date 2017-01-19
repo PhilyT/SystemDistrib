@@ -17,6 +17,7 @@ public class ChordPeerTest extends TestCase {
 	private ArrayList<ChordPeer> anotherChord;
 	private ChordPeer c1;
 	private ChordPeer c2;
+	private ChordPeer c3;
 
 	public void setUp() throws RemoteException {
 		chord = new ArrayList<ChordPeer>();
@@ -55,10 +56,12 @@ public class ChordPeerTest extends TestCase {
 
 		c1 = new ChordPeer(101, 2000);
 		c2 = new ChordPeer(101, 4000);
+		c3 = new ChordPeer(101, 6000);
 
 		Random rand = new Random();
-		while (c1.getMyId() == c2.getMyId()) {
+		while (c1.getMyId() == c2.getMyId() && c2.getMyId() == c3.getMyId() && c1.getMyId() == c3.getMyId() ) {
 			c2.setMyId(rand.nextInt(101));
+			c3.setMyId(rand.nextInt(101));
 		}
 	}
 
@@ -111,6 +114,19 @@ public class ChordPeerTest extends TestCase {
 		assertEquals(c2, c1.getPred());
 		assertEquals(c2, c1.getSucc());
 	}
+	
+	/**
+	 * test si les neuds se rajoute bien dans le reseau
+	 */
+	public void testMultiJoinChord() {
+		
+		c2.joinChord(c1);
+		c3.joinChord(c1);
+		System.out.println(c1);
+		System.out.println(c2);
+		System.out.println(c3);
+		assertTrue(true);
+	}
 
 	/**
 	 * test si les neuds quitte bien le reseau
@@ -134,5 +150,13 @@ public class ChordPeerTest extends TestCase {
 		assertEquals(chord.get(1).getSucc(),chord.get(3));
 		assertEquals(chord.get(0).getPred(),chord.get(3)); 
 		assertEquals(chord.get(0).getSucc(),chord.get(1));
+	}
+	
+	public void testC1ToJson() throws InterruptedException
+	{
+		c2.joinChord(c1);
+		c3.joinChord(c1);
+		c1.toJSON(c1, true);
+		assertTrue(true);
 	}
 }
