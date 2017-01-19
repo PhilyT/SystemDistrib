@@ -3,31 +3,38 @@ package com.m1miageprojet.annuaire;
 import com.m1miageprojet.chord.ChatRoom;
 import com.m1miageprojet.chord.ChordPeer;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
 
-
+/**
+ * Created by ch-ha_000 on 11/01/2017.
+ */
 public class Annuaire {
 
-    private int port = 2345;
-    private String host = "127.0.0.1";
-    private ServerSocket server;
-    private boolean isRunning = true;
-    public ArrayList<ChordPeer> listUsers;
-    public ArrayList<ChordPeer> listDisconnectedUsers;
-    public ArrayList<ChatRoom> listChatRooms;
+    ServerSocket serveur;
+    ArrayList<Thread> threadsClients;
+    private ArrayList<ChordPeer> listUsers;
+    private ArrayList<ChordPeer> listDisconnectedUsers;
+    private ArrayList<ChatRoom> listChatRooms;
 
+    public ChordPeer getLastConnected() {
+        return lastConnected;
+    }
 
-    public Annuaire() throws IOException {
+    public void setLastConnected(ChordPeer lastConnected) {
+        this.lastConnected = lastConnected;
+    }
+
+    private ChordPeer lastConnected;
+
+    public Annuaire(int port) throws IOException {
+        serveur = new ServerSocket(port);
+        threadsClients = new ArrayList<Thread>();
         this.listUsers= new ArrayList<ChordPeer>();
         this.listDisconnectedUsers = new ArrayList<ChordPeer>();
         this.listChatRooms = new ArrayList<ChatRoom>();
-        this.server = new ServerSocket(this.port);
     }
 
     public synchronized void addNewUser(ChordPeer newUser) {
@@ -35,42 +42,44 @@ public class Annuaire {
         System.out.println("Nouvel utilsateur ajouté");
     }
 
-    public synchronized void addDisconnectedUser(ChordPeer cp) {
-        listDisconnectedUsers.add(cp);
-    }
-
     public ArrayList<ChordPeer> getListUsers() {
-        return listUsers;
+            return listUsers;
     }
 
-    public ArrayList<ChordPeer> getListDisconnectedUsers() {
-        return listDisconnectedUsers;
-    }
 
-    public synchronized void Maj() {
-        try {
-            Socket socket = server.accept();
-            getListUsers().add(new ChordPeer(10, socket.getInetAddress().toString(), socket.getPort()));
+    public Socket waitClient() throws IOException {return serveur.accept();}
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+    public ArrayList<Thread> getThreadsClients() {return threadsClients;}
 
-    public void run() {
-        Socket clientSocket;
-        try {
-            while ((clientSocket = server.accept()) != null) {
-
-                InputStream is = clientSocket.getInputStream();
-                BufferedReader buffReader = new BufferedReader(new InputStreamReader(is));
-                String msg = buffReader.readLine();
-                if (msg != null) {
-                    System.out.println(msg);
-                }
+    public static void main(String[] args) {
+        try
+        {
+            int portNumber = 2000;
+            Annuaire servertest = new Annuaire(portNumber);
+            System.out.println("Serveur ecoute "+ portNumber + "...");
+            int cpt = 0;
+            while(true)
+            {
+                Socket clientSocket = servertest.waitClient();
+                servertest.getThreadsClients().add(new Thread(new Gestionnaire(clientSocket, servertest)));
+                servertest.getThreadsClients().get(cpt).start();
+                cpt++;
             }
-        } catch (IOException ex) {
-            System.err.println("Erreur : lecture de données echoué.");
+        }
+        catch(IOException e)
+        {
+            e.printStackTrace();
+            System.out.println("Serveur en arret !");
+        }
+        catch(NumberFormatException nbe)
+        {
+            nbe.printStackTrace();
+            System.out.println("Serveur en arret !");
         }
     }
+
+
+
 }
+
+

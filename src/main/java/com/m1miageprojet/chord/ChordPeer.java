@@ -161,6 +161,11 @@ public class ChordPeer {
         } else if (predecessorId > this.myId && key > predecessorId) {
             return this;
         } else {
+            for (int i = finger.length-1; i >= 0; i--) {
+                if (finger[i].getId() > myId && finger[i].getId() < key) {
+                    return findkey(finger[i].getId());
+                }
+            }
             return succ.findkey(key);
         }
     }
