@@ -78,7 +78,7 @@ public class GestionSalon {
 			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
 				s = salles.get(chatKey).getMessages();
 			} else
-				System.out.println("rejoins le salon pou pouvoir lir les messages");
+				System.out.println("rejoins le salon pour pouvoir lire les messages");
 
 		} else
 			System.out.println("le salon nexiste pas");
@@ -92,7 +92,7 @@ public class GestionSalon {
 			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
 				s = salles.get(chatKey).getMessages().get(salles.get(chatKey).getMessages().size() - 1);
 			} else
-				System.out.println("rejoins le salon pou pouvoir lir les messages");
+				System.out.println("rejoins le salon pour pouvoir lire les messages");
 
 		} else
 			System.out.println("le salon nexiste pas");

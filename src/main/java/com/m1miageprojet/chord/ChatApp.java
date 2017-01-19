@@ -1,6 +1,7 @@
 package com.m1miageprojet.chord;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.NoSuchElementException;
 import java.util.Scanner;
@@ -118,6 +119,33 @@ public class ChatApp {
 
 						req.sendRequest("SMS_DANS_SALON", peerN.getSucc());
 						break;
+					case "redD":
+						System.out.println("lecture du dernier message dans un salon");
+						Scanner scann = new Scanner(System.in);
+						System.out.println(" saisissez la cle du salon a lire ");
+						long SalonKey = scann.nextLong();
+						System.out.println(peerN.getGestionSalon().readlastMessage(SalonKey));
+						break;
+						
+					case "redT":
+						System.out.println("lecture de tout les messages dans un salon");
+						
+						System.out.println(" saisissez la cle du salon a lire ");
+						long SalonKeyy = sc.nextLong();
+						ArrayList<String> messages = new ArrayList<String> ();
+						messages=peerN.getGestionSalon().readChatRoom(SalonKeyy);
+						if(!messages.isEmpty()){
+							for(String chaine:messages){
+								System.out.println(chaine);
+								
+							}
+						}
+						else
+							System.out.println("ce salon ne contient aucun message");
+						
+						break;
+						
+						
 					default:
 						System.err.println("commande introuvable.");
 					}
