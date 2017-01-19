@@ -41,20 +41,11 @@ Pour lancé le chat :
 ```
 java -jar chat-jar-with-dependencies.jar
 ```
-  
+   
 >Utilisation de l'application :
-
-Lancer une application comme etant le ChordPeer 0, ce dernier va etre le point d'entré pour les autres ChordPeers.
-Donner un seul argument qui le numero de port.
-```
-ChatApp 8484
-```
-
-les autres ChordPeers peuvent joindre le chord
-```
-ChatApp 8485 192.168.12.10 8484
-```
-
+  
+Donner un numéro de port ainsi qu'une clé comprise entre 0 et 100 compris arpsè avoir executer le jar du chat.  
+  
 ### Documents  
   
 La documentation se trouve dans le repertoire doc à  la racine.  
