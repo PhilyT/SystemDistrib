@@ -48,7 +48,13 @@ public class Annuaire {
     }
 
     public synchronized void Maj() {
+        try {
+            Socket socket = server.accept();
+            getListUsers().add(new ChordPeer(10, socket.getInetAddress().toString(), socket.getPort()));
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public void run() {
