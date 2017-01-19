@@ -98,20 +98,27 @@ public class ChatApp {
 							System.out.println("salon  de cle :" + id);
 						}
 						break;
+					case "-creat":
+						System.out.println("creation dun salon");
+						String cleeS = sc.nextLine();
+						peerN.getGestionSalon().creatChatRoom(peerN,Long.parseLong(cleeS) );
+						
+						req.sendRequest("CREAT_SALON", peerN.getSucc());
+						break;
 					case "-s":
 						System.out.println("clee du salon a rejoindre");
 						String cleeSalon = sc.nextLine();
 
-						peerN.getGestionSalon().joinChatRoom(Integer.parseInt(cleeSalon), peerN);
+						peerN.getGestionSalon().joinChatRoom(Long.parseLong(cleeSalon), peerN);
 						req.sendRequest("JOIN_SALON", peerN.getSucc());
 						break;
-					case "sms":
+					case "-sms":
 						System.out.println(" envoie de message dans un salon");
 
 						Scanner scan = new Scanner(System.in);
 						System.out.println(" saisissez la cle du salon dans le quel vous voulez envoyez un message");
 
-						int cleSalon = scan.nextInt();
+						long cleSalon = scan.nextLong();
 
 						Scanner s = new Scanner(System.in);
 						System.out.println("entrez votre message dans le salon");

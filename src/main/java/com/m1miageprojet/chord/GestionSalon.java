@@ -41,7 +41,7 @@ public class GestionSalon {
 		
 	}
 
-	public void joinChatRoom(int chatKey, ChordPeer newNoeud) {
+	public void joinChatRoom(long chatKey, ChordPeer newNoeud) {
 		if (salles.containsKey(chatKey)) {
 
 			salles.get(chatKey).getNoeuds().add(newNoeud);
@@ -58,7 +58,7 @@ public class GestionSalon {
 
 	}
 
-	public void sendToChatRoom(String s, int chatKey, ChordPeer noeud) {
+	public void sendToChatRoom(String s,  long chatKey, ChordPeer noeud) {
 		if (salles.containsKey(chatKey)) {
 			if (salles.get(chatKey).getNoeuds().contains(noeud)) {
 				salles.get(chatKey).getMessages().add(s);
@@ -72,7 +72,7 @@ public class GestionSalon {
 
 	}
 
-	public ArrayList<String> readChatRoom(int chatKey) {
+	public ArrayList<String> readChatRoom(long chatKey) {
 		ArrayList<String> s = new ArrayList<String>();
 		if (salles.containsKey(chatKey)) {
 			if (salles.get(chatKey).getNoeuds().contains(this.peer)) {
