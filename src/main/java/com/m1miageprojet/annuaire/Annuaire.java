@@ -15,11 +15,37 @@ public class Annuaire {
 
     ServerSocket serveur;
     ArrayList<Thread> threadsClients;
+    private ArrayList<ChordPeer> listUsers;
+    private ArrayList<ChordPeer> listDisconnectedUsers;
+    private ArrayList<ChatRoom> listChatRooms;
+
+    public ChordPeer getLastConnected() {
+        return lastConnected;
+    }
+
+    public void setLastConnected(ChordPeer lastConnected) {
+        this.lastConnected = lastConnected;
+    }
+
+    private ChordPeer lastConnected;
 
     public Annuaire(int port) throws IOException {
         serveur = new ServerSocket(port);
         threadsClients = new ArrayList<Thread>();
+        this.listUsers= new ArrayList<ChordPeer>();
+        this.listDisconnectedUsers = new ArrayList<ChordPeer>();
+        this.listChatRooms = new ArrayList<ChatRoom>();
     }
+
+    public synchronized void addNewUser(ChordPeer newUser) {
+        listUsers.add(newUser);
+        System.out.println("Nouvel utilsateur ajouté");
+    }
+
+    public ArrayList<ChordPeer> getListUsers() {
+            return listUsers;
+    }
+
 
     public Socket waitClient() throws IOException {return serveur.accept();}
 
@@ -35,7 +61,7 @@ public class Annuaire {
             while(true)
             {
                 Socket clientSocket = servertest.waitClient();
-                servertest.getThreadsClients().add(new Thread(new Gestionnaire(clientSocket)));
+                servertest.getThreadsClients().add(new Thread(new Gestionnaire(clientSocket, servertest)));
                 servertest.getThreadsClients().get(cpt).start();
                 cpt++;
             }

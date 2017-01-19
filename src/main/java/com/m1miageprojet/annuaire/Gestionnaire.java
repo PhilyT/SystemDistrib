@@ -15,35 +15,14 @@ import java.util.ArrayList;
 public class Gestionnaire implements Runnable {
 
     private Socket client;
-    private ArrayList<ChordPeer> listUsers;
-    private ArrayList<ChordPeer> listDisconnectedUsers;
-    private ArrayList<ChatRoom> listChatRooms;
-    private ChordPeer lastConnected;
+    private Socket server;
+    private Annuaire annuaire;
 
 
-    public Gestionnaire(Socket socket) {
+    public Gestionnaire(Socket socket, Annuaire annuaire) {
         this.client = socket;
-        this.listUsers= new ArrayList<ChordPeer>();
-        this.listDisconnectedUsers = new ArrayList<ChordPeer>();
-        this.listChatRooms = new ArrayList<ChatRoom>();
     }
 
-    public synchronized void addNewUser(ChordPeer newUser) {
-        listUsers.add(newUser);
-        System.out.println("Nouvel utilsateur ajouté");
-    }
-
-    public synchronized void addDisconnectedUser(ChordPeer cp) {
-        listDisconnectedUsers.add(cp);
-    }
-
-    public ArrayList<ChordPeer> getListUsers() {
-        return listUsers;
-    }
-
-    public ArrayList<ChordPeer> getListDisconnectedUsers() {
-        return listDisconnectedUsers;
-    }
 
 
     public void lireClient(BufferedReader bufferClient) throws IOException, JSONException {
@@ -58,13 +37,14 @@ public class Gestionnaire implements Runnable {
             if (inputLine.isEmpty())
             {
                 ChordPeer newUser = new ChordPeer(new JSONObject(inputLine));
-                listUsers.add(newUser);
-                if (lastConnected == null) {
-                    lastConnected = newUser;
+                server = new Socket(newUser.getIp(), newUser.getPort());
+                annuaire.addNewUser(newUser);
+                if (annuaire.getLastConnected() == null) {
+                    annuaire.setLastConnected(newUser);
                     return;
                 }
                 else {
-                    newUser.joinChord(lastConnected);
+                    newUser.joinChord(annuaire.getLastConnected());
                 }
             }
         }
@@ -88,12 +68,9 @@ public class Gestionnaire implements Runnable {
     }
 
 
-    public void sendJSON(JSONObject jsonObject) throws IOException {
-        JSONObject jsonObject2 = new JSONObject();
-        OutputStream out = client.getOutputStream();
-        ObjectOutputStream o = new ObjectOutputStream(out);
-        o.writeObject(jsonObject2);
-        out.flush();
-
+    public void sendJSON() throws IOException {
+        JSONObject jsonObject2 = annuaire.getLastConnected().toJSON(annuaire.getLastConnected(), true);
+        server.getOutputStream().write(jsonObject2.toString().getBytes());
+        server.close();
     }
 }
