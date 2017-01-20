@@ -44,7 +44,7 @@ java -jar chat-jar-with-dependencies.jar
    
 >Utilisation de l'application :
   
-Donner un numéro de port ainsi qu'une clé comprise entre 0 et 100 compris arpsè avoir executer le jar du chat.  
+Donner un numéro de port ainsi qu'une clé comprise entre 0 et 100 compris après avoir executer le jar du chat.  Attention le port numéro 2000 est pris par l'annuaire.  
   
 ### Documents  
   

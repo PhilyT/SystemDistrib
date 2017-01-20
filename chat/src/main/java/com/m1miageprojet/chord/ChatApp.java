@@ -9,6 +9,9 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import org.codehaus.jettison.json.JSONException;
+import org.codehaus.jettison.json.JSONObject;
+
 import com.m1miageprojet.tcpcommunication.DataSender;
 import com.m1miageprojet.tcpcommunication.Request;
 
@@ -31,10 +34,13 @@ public class ChatApp {
 			peerN.runListener(req);
 
 			DataSender d = new DataSender();
-			d.send(peerN.toJSON(peerN,  true).toString().getBytes(),"localhost", 2000);
+			JSONObject obj = new JSONObject();
+			obj.put("chordpeer", peerN.toJSON(peerN,  true));
+			obj.put("chatroom", peerN.getGestionSalon().getChatRoomList().values().iterator().next().toJson());
+			d.send(obj.toString().getBytes(),"localhost", 2000);
 
 			System.out.println(
-					"Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter le chord\n\texit: Sortir de l'application");
+					returnCommande());
 			while (!(line = sc.nextLine()).equals("\n")) {
 				if (!line.trim().isEmpty()) {
 					switch (line.toLowerCase()) {
@@ -79,7 +85,7 @@ public class ChatApp {
 					case "cls":
 						cleanScreen();
 						System.out.println(
-								"Options:\n\t-I: afficher les infos du ChordPeer\n\t-C: chatter avec un chordPeer\n\tcls:effacer l'ecran\n\t-Q: quitter");
+								returnCommande());
 						break;
 					case "-ls":
 						Hashtable<Long, ChatRoom> listeSalons = peerN.getGestionSalon().getChatRoomList();
@@ -157,6 +163,9 @@ public class ChatApp {
 			System.err.println("port incorrecte");
 		} catch (NoSuchElementException e) {
 			System.err.println("Arret de l'application");
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -172,5 +181,19 @@ public class ChatApp {
 			Logger.getLogger(ChatApp.class.getName()).log(Level.SEVERE, null, ex);
 		}
 
+	}
+	
+	private static String returnCommande(){
+		return"Options:\n\t-I: afficher les infos du ChordPeer\n"
+				+ "\t-C: chatter avec un chordPeer\n"
+				+ "\tcls:effacer l'ecran\n"
+				+ "\t-Q: quitter le chord\n"
+				+ "\t-ls list les salons"
+				+ "\t-creat créé un salon"
+				+ "\t-s rejoint un salon"
+				+ "\t-sms envoi un message"
+				+ "\tredD lecture du dernier message dans un salon"
+				+ "\tredT lecture de tout les messages d'un salon"
+				+ "\texit: Sortir de l'application";
 	}
 }

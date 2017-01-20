@@ -2,6 +2,8 @@ package com.m1miageprojet.annuaire;
 
 import com.m1miageprojet.chord.ChatRoom;
 import com.m1miageprojet.chord.ChordPeer;
+
+import org.codehaus.jettison.json.JSONArray;
 import org.codehaus.jettison.json.JSONException;
 import org.codehaus.jettison.json.JSONObject;
 
@@ -33,16 +35,20 @@ public class Gestionnaire implements Runnable {
             System.out.println(inputLine);
             if (!inputLine.isEmpty())
             {
-                ChordPeer newUser = new ChordPeer(new JSONObject(inputLine));
+            	JSONObject obj = new JSONObject(inputLine);
+                ChordPeer newUser = new ChordPeer(obj.getJSONObject("chordpeer"));
+                ChatRoom cahtroom = new ChatRoom(obj.getJSONObject("chatroom"));
                 server = new Socket(newUser.getIp(), newUser.getPort());
+                annuaire.getListChatRooms().add(cahtroom);
                 annuaire.addNewUser(newUser);
                 if (annuaire.getLastConnected() == null) {
-                	sendJSON(new JSONObject(inputLine));
+                	sendJSON(obj.getJSONObject("chordpeer"));
                     annuaire.setLastConnected(newUser);
+                    
                     return;
                 }
                 else {
-                	sendJSON(new JSONObject(inputLine));
+                	sendJSON(obj.getJSONObject("chordpeer"));
                 	newUser.joinChord(annuaire.getLastConnected());
                     return;
                 }
@@ -74,6 +80,16 @@ public class Gestionnaire implements Runnable {
         	if(annuaire.getLastConnected() != null){
                 JSONObject chord = annuaire.getLastConnected().toJSON(annuaire.getLastConnected(), true);
                 jsonObject.put("expe", chord);
+        	}
+        	if(!annuaire.getListChatRooms().isEmpty()){
+        		JSONObject s = new JSONObject();
+                JSONArray salons = new JSONArray();
+                for(ChatRoom chatroom : annuaire.getListChatRooms())
+                {
+                	salons.put(chatroom.toJson());
+                }
+                s.put("salons", salons);
+                jsonObject.put("salons", s);
         	}
 			jsonObject.put("req", "REP_JOIN");
 			jsonObject.put("dest", c);

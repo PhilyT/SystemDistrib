@@ -34,7 +34,7 @@ public class Annuaire {
         threadsClients = new ArrayList<Thread>();
         this.listUsers= new ArrayList<ChordPeer>();
         this.listDisconnectedUsers = new ArrayList<ChordPeer>();
-        this.listChatRooms = new ArrayList<ChatRoom>();
+        this.setListChatRooms(new ArrayList<ChatRoom>());
     }
 
     public synchronized void addNewUser(ChordPeer newUser) {
@@ -77,6 +77,20 @@ public class Annuaire {
             System.out.println("Serveur en arret !");
         }
     }
+
+	/**
+	 * @return the listChatRooms
+	 */
+	public ArrayList<ChatRoom> getListChatRooms() {
+		return listChatRooms;
+	}
+
+	/**
+	 * @param listChatRooms the listChatRooms to set
+	 */
+	public void setListChatRooms(ArrayList<ChatRoom> listChatRooms) {
+		this.listChatRooms = listChatRooms;
+	}
 
 
 

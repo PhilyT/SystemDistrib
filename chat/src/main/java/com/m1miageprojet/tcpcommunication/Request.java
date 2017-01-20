@@ -56,8 +56,12 @@ public class Request {
 					jsonReq.put("salons", peer.getGestionSalon().toJSON());
 					jsonReq.put("req", "REP_JOIN");
 				}
-				
+				if ("JOIN_SALON".equals(req)) {
+					jsonReq.put("salons", peer.getGestionSalon().toJSON());
+					jsonReq.put("req", "JOIN_SALON");
+				} 
 				else if("SMS_DANS_SALON".equals(req)){
+					jsonReq.put("salons", peer.getGestionSalon().toJSON());
 					jsonReq.put("messages", peer.getGestionSalon().toJSON());
 					jsonReq.put("req", "SMS_DANS_SALON");
 					
@@ -70,27 +74,6 @@ public class Request {
 			} catch (JSONException e2) {
 				e2.printStackTrace();
 			}
-		}
-		ds.send(jsonReq.toString().getBytes(), distPeer.getIp(), distPeer.getPort());
-	}
-	
-	/**
-	 * Send a request to a ChatRoom
-	 * @param req
-	 * @param distPeer
-	 * @param keyChatRoom
-	 */
-	public void sendRequest(String req, ChordPeer distPeer, int keyChatRoom) {
-		DataSender ds = new DataSender();
-		JSONObject jsonReq = new JSONObject();
-		try {
-			jsonReq.put("dest", distPeer.toJSON(distPeer, true));
-			if ("JOIN_SALON".equals(req)) {
-				jsonReq.put("keyChatRoom", keyChatRoom);
-				jsonReq.put("req", "JOIN_SALON");
-			} 
-		} catch (JSONException e2) {
-			e2.printStackTrace();
 		}
 		ds.send(jsonReq.toString().getBytes(), distPeer.getIp(), distPeer.getPort());
 	}
@@ -198,10 +181,6 @@ public class Request {
 				if(expe != null)
 				{
 					peer.joinChord(dest);
-				}
-				if(jsonReq.has("salons"))
-				{
-					peer.getGestionSalon().setChatRoom(jsonReq.getJSONObject("salons"));
 				}	
 			}
 
