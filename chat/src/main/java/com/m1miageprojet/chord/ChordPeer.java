@@ -188,7 +188,7 @@ public class ChordPeer {
         }
         //periodically calls fix fingers to make sure its finger table entries are correct.
         this.fixFingers();
-        this.showFingerTable();
+        //this.showFingerTable();
     }
 
     /**
