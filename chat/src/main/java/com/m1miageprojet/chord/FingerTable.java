@@ -2,19 +2,27 @@ package com.m1miageprojet.chord;
 
 public class FingerTable {
 
-    private String ip;
-    private int id;
+    Finger[] fingerList;
 
-    public void setIp(String ip) {
-        this.ip = ip;
+    public FingerTable(ChordPeer peer) {
+        this.fingerList = new Finger[ChordPeer.KEY_LENGTH];
+        for (int i = 0; i < fingerList.length; i++) {
+            long startKey = peer.getMyId();
+            fingerList[i] = new Finger(startKey, peer);
+        }
     }
 
-    void setId(int id) {
-        this.id = id;
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < ChordPeer.KEY_LENGTH; i++) {
+            Finger finger = this.getFingerList(i);
+            sb.append(finger.getStart()).append("\t").append(finger.getPeer()).append("\n");
+        }
+        return sb.toString();
     }
 
-    public int getId() {
-        return this.id;
+    public Finger getFingerList(int i) {
+        return fingerList[i];
     }
-
 }

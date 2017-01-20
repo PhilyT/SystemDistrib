@@ -13,6 +13,7 @@ import com.m1miageprojet.tcpcommunication.Request;
 
 public class ChordPeer {
 
+    public static int KEY_LENGTH = 64;
     private int myId;
     private int port;
     private String ip;
@@ -20,7 +21,7 @@ public class ChordPeer {
     private ChordPeer pred;
     private int maxKeyValue;
     private GestionSalon gestionSalon;
-    private FingerTable[] finger;
+    private FingerTable fingerTable = new FingerTable(this);
     private ConnexionListener listener;
 
     /**
@@ -41,13 +42,14 @@ public class ChordPeer {
         this.succ = this;
         this.pred = this;
         this.setGestionSalon(new GestionSalon(this));
-        finger = new FingerTable[(int) Math.log(maxKeyValue)];
+        /*finger = new FingerTable[(int) Math.log(maxKeyValue)];
 
         for (int i = 0; i < finger.length; i++) {
             finger[i] = new FingerTable();
             finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
             //finger[i].setIp(findkey(finger[i].getId()).getIp());
-        }
+        }*/
+
     }
 
     /**
@@ -64,18 +66,18 @@ public class ChordPeer {
         this.myId = new Random().nextInt(maxKeyValue);
         this.succ = this;
         this.pred = this;
-        finger = new FingerTable[(int) Math.log(maxKeyValue)];
+        /*finger = new FingerTable[(int) Math.log(maxKeyValue)];
 
         for (int i = 0; i < finger.length; i++) {
             finger[i] = new FingerTable();
             finger[i].setId((int) (myId + Math.pow(2, i) % maxKeyValue));
             //finger[i].setIp(findkey(finger[i].getId()).getIp());
-        }
+        }*/
     }
 
     /**
      * Constructor with JSON object
-     * 
+     *
      * @param json
      */
     public ChordPeer(JSONObject json) {
@@ -84,23 +86,20 @@ public class ChordPeer {
             this.port = json.getInt("port");
             this.maxKeyValue = json.getInt("maxKeyValue");
             this.myId = json.getInt("key");
-            if(json.has("succ") && json.has("pred") && json.getJSONObject("pred").getInt("key") == json.getJSONObject("succ").getInt("key"))
-        	{
-        		ChordPeer sameChordPeer = new ChordPeer(json.getJSONObject("succ"), this, this);
-        		this.succ = sameChordPeer;
-        		this.pred = sameChordPeer;
-        	}
-            else
-            {
-            	if (json.has("succ")) {
-                	
+            if (json.has("succ") && json.has("pred") && json.getJSONObject("pred").getInt("key") == json.getJSONObject("succ").getInt("key")) {
+                ChordPeer sameChordPeer = new ChordPeer(json.getJSONObject("succ"), this, this);
+                this.succ = sameChordPeer;
+                this.pred = sameChordPeer;
+            } else {
+                if (json.has("succ")) {
+
                     this.succ = new ChordPeer(json.getJSONObject("succ"), this, this);
                 } else {
                     this.succ = this;
                 }
-                if(json.has("pred")){
-                	this.pred = new ChordPeer(json.getJSONObject("pred"), this, this);
-                } else{
+                if (json.has("pred")) {
+                    this.pred = new ChordPeer(json.getJSONObject("pred"), this, this);
+                } else {
                     this.pred = this;
                 }
             }
@@ -110,37 +109,35 @@ public class ChordPeer {
     }
 
     private ChordPeer(JSONObject json, ChordPeer base, ChordPeer chordPeer) {
-    	try {
+        try {
             this.ip = json.getString("ip");
             this.port = json.getInt("port");
             this.maxKeyValue = json.getInt("maxKeyValue");
             this.myId = json.getInt("key");
             if (json.has("succ")) {
-            	if(json.getJSONObject("succ").getInt("key") == base.getMyId())
-            	{
-            		this.succ = base;
-            	}else{
-            		this.succ = new ChordPeer(json.getJSONObject("succ"), base, this);
-            	}
+                if (json.getJSONObject("succ").getInt("key") == base.getMyId()) {
+                    this.succ = base;
+                } else {
+                    this.succ = new ChordPeer(json.getJSONObject("succ"), base, this);
+                }
             } else {
                 this.succ = chordPeer;
             }
-            if(json.has("pred")){
-            	if(json.getJSONObject("pred").getInt("key") == base.getMyId())
-            	{
-            		this.pred = base;
-            	}else{
-            		this.pred = new ChordPeer(json.getJSONObject("pred"), base, this);
-            	}
-            } else{
+            if (json.has("pred")) {
+                if (json.getJSONObject("pred").getInt("key") == base.getMyId()) {
+                    this.pred = base;
+                } else {
+                    this.pred = new ChordPeer(json.getJSONObject("pred"), base, this);
+                }
+            } else {
                 this.pred = chordPeer;
             }
         } catch (JSONException e) {
             e.printStackTrace();
         }
-	}
+    }
 
-	/**
+    /**
      *
      * @param key
      * @return the ip's node responsible for the key
@@ -177,10 +174,21 @@ public class ChordPeer {
      * @param chordPeerHandle
      */
     public void joinChord(ChordPeer peer) {
-    	this.setSucc(peer.findkey(getMyId()));
+        this.setSucc(peer.findkey(getMyId()));
         this.setPred(peer.findkey(succ.getPred().getMyId()));
         pred.setSucc(this);
         succ.setPred(this);
+        ChordPeer preceding = this.getSucc().getPred();
+        //Each node runs a “stabilization” protocol periodically in the background to update successor pointer and finger table
+        this.stabilize();
+        if (preceding == null) {
+            this.getSucc().stabilize();
+        } else {
+            preceding.stabilize();
+        }
+        //periodically calls fix fingers to make sure its finger table entries are correct.
+        this.fixFingers();
+        this.showFingerTable();
     }
 
     /**
@@ -196,8 +204,7 @@ public class ChordPeer {
     /**
      * sends data to a given chord peer
      *
-     * @param data
-     *            is some data to communicate
+     * @param data is some data to communicate
      */
     public void sendData(byte[] data) {
         Request req = new Request(this);
@@ -206,9 +213,8 @@ public class ChordPeer {
 
     /**
      * sends message by a given chord peer
-     * 
-     * @param msg
-     *            as a String
+     *
+     * @param msg as a String
      * @param sender
      */
     public void sendData(String msg, ChordPeer sender) {
@@ -226,19 +232,16 @@ public class ChordPeer {
         listener = new ConnexionListener(this);
         listener.listen(req);
     }
-    
-    public void stopListener()
-    {
-    	listener.stopConnection();
+
+    public void stopListener() {
+        listener.stopConnection();
     }
 
     /**
      * forward the message if peer is not expe
-     * 
-     * @param msg
-     *            as a string
-     * @param expe
-     *            as the sender
+     *
+     * @param msg as a string
+     * @param expe as the sender
      */
     public void forwardMessage(String msg, ChordPeer expe) {
         if (!equals(expe)) {
@@ -259,8 +262,7 @@ public class ChordPeer {
     }
 
     /**
-     * @param myId
-     *            the myId to set
+     * @param myId the myId to set
      */
     public void setMyId(int myId) {
         this.myId = myId;
@@ -274,8 +276,7 @@ public class ChordPeer {
     }
 
     /**
-     * @param ip
-     *            the ip to set
+     * @param ip the ip to set
      */
     public void setIp(String ip) {
         this.ip = ip;
@@ -289,8 +290,7 @@ public class ChordPeer {
     }
 
     /**
-     * @param port
-     *            the port to set
+     * @param port the port to set
      */
     public void setPort(int port) {
         this.port = port;
@@ -304,8 +304,7 @@ public class ChordPeer {
     }
 
     /**
-     * @param succ
-     *            the succ to set
+     * @param succ the succ to set
      */
     public void setSucc(ChordPeer succ) {
         this.succ = succ;
@@ -319,8 +318,7 @@ public class ChordPeer {
     }
 
     /**
-     * @param pred
-     *            the pred to set
+     * @param pred the pred to set
      */
     public void setPred(ChordPeer pred) {
         this.pred = pred;
@@ -334,11 +332,89 @@ public class ChordPeer {
     }
 
     /**
-     * @param gestionSalon
-     *            the gestionSalon to set
+     * @param gestionSalon the gestionSalon to set
      */
     public void setGestionSalon(GestionSalon gestionSalon) {
         this.gestionSalon = gestionSalon;
+    }
+
+    /**
+     * Stabilize method
+     *
+     */
+    public void stabilize() {
+        ChordPeer peer = succ.getPred();
+        if (peer != null) {
+            long key = peer.getMyId();
+            if ((this.equals(succ)) || (key > this.myId && key < succ.getMyId())) {
+                succ = peer;
+            }
+        }
+        succ.notifyPred(this);
+    }
+
+    /**
+     *
+     * @param peer
+     */
+    private void notifyPred(ChordPeer peer) {
+        long key = peer.getMyId();
+        if (pred == null || (key > pred.getMyId() && key < this.myId)) {
+            pred = peer;
+        }
+    }
+
+    /**
+     * fix fingers
+     */
+    public void fixFingers() {
+
+        for (int i = 0; i < KEY_LENGTH; i++) {
+            Finger finger = fingerTable.getFingerList(i);
+            long key = finger.getStart();
+            //finger.setPeer(findSuccessor(key));
+        }
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public ChordPeer findSuccessor(long key) {
+        if (this == succ) {
+            return this;
+        }
+        if ((key > this.myId && key < succ.getMyId()) || key == succ.getMyId()) {
+            return succ;
+        } else {
+            ChordPeer peer = closestPrecedingPeer(key);
+            if (peer == this) {
+                return succ.findSuccessor(key);
+            }
+            return peer.findSuccessor(key);
+        }
+    }
+
+    /**
+     *
+     * @param key
+     * @return
+     */
+    public ChordPeer closestPrecedingPeer(long key) {
+        for (int i = KEY_LENGTH - 1; i >= 0; i--) {
+            Finger finger = fingerTable.getFingerList(i);
+            long fingerKey = finger.getPeer().getMyId();
+            if (fingerKey > this.myId && fingerKey < key) {
+                return finger.getPeer();
+            }
+        }
+        return this;
+    }
+
+    public void showFingerTable() {
+        System.out.println("finger table du pair: " + this.toString());
+        System.out.println(this.fingerTable.toString());
     }
 
     /**
@@ -350,61 +426,54 @@ public class ChordPeer {
     }
 
     /**
-     * 
+     *
      * @param chordPeerBase
      * @return JSONObject
      */
     public JSONObject toJSON(ChordPeer chordPeerBase, boolean b) {
-    	ArrayList<ChordPeer> chordPeersVisits = new ArrayList<ChordPeer>();
-    	chordPeersVisits.add(chordPeerBase);
+        ArrayList<ChordPeer> chordPeersVisits = new ArrayList<ChordPeer>();
+        chordPeersVisits.add(chordPeerBase);
         JSONObject json = new JSONObject();
         try {
             json.put("ip", getIp());
             json.put("port", getPort());
             json.put("key", getMyId());
             json.put("maxKeyValue", maxKeyValue);
-            if(!succ.equals(this)&& !pred.equals(this)&& b)
-        	{
-        		json.put("succ", succ.toJSON(chordPeersVisits));
-        		chordPeersVisits.clear();
-        		chordPeersVisits.add(chordPeerBase);
-            	json.put("pred", pred.toJSON(chordPeersVisits));
-        	}
+            if (!succ.equals(this) && !pred.equals(this) && b) {
+                json.put("succ", succ.toJSON(chordPeersVisits));
+                chordPeersVisits.clear();
+                chordPeersVisits.add(chordPeerBase);
+                json.put("pred", pred.toJSON(chordPeersVisits));
+            }
         } catch (JSONException e) {
             e.printStackTrace();
         }
         return json;
     }
-    
+
     /**
-     * 
+     *
      * @param chordPeersVisits as the list of ChordPeers have visited
      * @return JSONObject
      */
     public JSONObject toJSON(ArrayList<ChordPeer> chordPeersVisits) {
-    	ArrayList<ChordPeer> iter = chordPeersVisits;
-    	iter.add(this);
+        ArrayList<ChordPeer> iter = chordPeersVisits;
+        iter.add(this);
         JSONObject json = new JSONObject();
         try {
             json.put("ip", getIp());
             json.put("port", getPort());
             json.put("key", getMyId());
             json.put("maxKeyValue", maxKeyValue);
-            if(!chordPeersVisits.contains(succ))
-        	{
-        		json.put("succ", succ.toJSON(iter));
-        	}
-            else if(chordPeersVisits.get(0).equals(succ))
-            {
-            	json.put("succ", succ.toJSON(succ, false));
+            if (!chordPeersVisits.contains(succ)) {
+                json.put("succ", succ.toJSON(iter));
+            } else if (chordPeersVisits.get(0).equals(succ)) {
+                json.put("succ", succ.toJSON(succ, false));
             }
-            if(!chordPeersVisits.contains(pred))
-        	{
-        		json.put("pred", pred.toJSON(iter));
-        	}
-            else if(chordPeersVisits.get(0).equals(pred))
-            {
-            	json.put("pred", pred.toJSON(pred, false));
+            if (!chordPeersVisits.contains(pred)) {
+                json.put("pred", pred.toJSON(iter));
+            } else if (chordPeersVisits.get(0).equals(pred)) {
+                json.put("pred", pred.toJSON(pred, false));
             }
         } catch (JSONException e) {
             e.printStackTrace();
