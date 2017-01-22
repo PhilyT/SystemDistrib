@@ -117,16 +117,20 @@ public class Request {
 			if (!reqName.equals("REP_JOIN") && expe != null && !peer.equals(expe)) {
 				
 				if (reqName.equals("JOIN")) {
+					if(expe.equals(peer.findkey(expe.getMyId())) && dest.equals(peer))
+					{
+						return;
+					}
 					ChatRoom chat = new ChatRoom (jsonReq.getJSONObject("salons").getJSONArray("salons").getJSONObject(0));//on recupere le salon crer par lexp
 					peer.getGestionSalon().getChatRoomList().put(chat.getId(), chat);
 					expe.joinChord(peer);
 					System.out.println("un peer vient de joindre le Chord : " + expe);
 					
 				} else if (reqName.equals("LEAVE")) {
-					System.out.println("peer :" + peer);
+					/*System.out.println("peer :" + peer);
 					System.out.println("succ :" + peer.getSucc());
 					System.out.println("pred :" + peer.getPred());
-					System.out.println("suc suc suc :" + peer.getSucc().getSucc().getSucc());
+					System.out.println("suc suc suc :" + peer.getSucc().getSucc().getSucc());*/
 					if(peer.equals(dest) && !peer.getPred().equals(expe))
 					{
 						return;//Casse la boucle infini d'envoi de messages
@@ -180,7 +184,11 @@ public class Request {
 			else if (peer.equals(expe)&& reqName.equals("JOIN")) {
 				if(expe != null)
 				{
-					peer.joinChord(dest);
+					if(!dest.findkey(peer.getMyId()).equals(peer))
+					{
+						peer.joinChord(dest);
+						peer.forwardMessage(req, expe);
+					}
 				}	
 			}
 

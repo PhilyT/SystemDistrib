@@ -238,13 +238,13 @@ public class ChordPeer {
     }
 
     /**
-     * forward the message if peer is not expe
+     * forward the message
      *
      * @param msg as a string
      * @param expe as the sender
      */
     public void forwardMessage(String msg, ChordPeer expe) {
-        if (!equals(expe)) {
+        if (!equals(succ)) {
             sendData(msg, expe);
         }
     }
