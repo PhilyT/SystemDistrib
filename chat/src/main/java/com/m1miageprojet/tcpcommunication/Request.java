@@ -9,9 +9,17 @@ import com.m1miageprojet.chord.ChordPeer;
 
 public class Request {
 	private ChordPeer peer;
+	private String annuaireIP;
+	private int annuairePort;
 
 	public Request(ChordPeer peer) {
 		this.peer = peer;
+	}
+	
+	public Request(ChordPeer peer, String annuaireIP, int port) {
+		this.peer = peer;
+		this.annuaireIP = annuaireIP;
+		this.annuairePort = port;
 	}
 
 	/**
@@ -38,10 +46,12 @@ public class Request {
 	public void sendRequest(String req, ChordPeer sender, ChordPeer distPeer) {
 		DataSender ds = new DataSender();
 		JSONObject jsonReq;
+		JSONObject annuaireReq;
 		try {
 			jsonReq = new JSONObject(req);
 		} catch (JSONException e1) {
 			jsonReq = new JSONObject();
+			annuaireReq = new JSONObject();
 			try {
 				jsonReq.put("expe", sender.toJSON(sender, true));
 				jsonReq.put("dest", distPeer.toJSON(distPeer, true));
@@ -52,6 +62,13 @@ public class Request {
 					jsonReq.put("req", "LEAVE");
 					System.out.println("Requete: quitter le Chord ..");
 					peer.leaveChord();
+					if(annuaireIP != null)
+					{
+						DataSender dsAnnuaire = new DataSender();
+						annuaireReq.put("req", "LEAVE");
+						annuaireReq.put("chordpeer", peer.toJSON(peer, true));
+						dsAnnuaire.send(annuaireReq.toString().getBytes(), annuaireIP, annuairePort);
+					}
 				} else if ("REP_JOIN".equals(req)) {
 					jsonReq.put("salons", peer.getGestionSalon().toJSON());
 					jsonReq.put("req", "REP_JOIN");

@@ -30,13 +30,14 @@ public class ChatApp {
 			ChordPeer peerN = new ChordPeer(101, Integer.parseInt(ports));
 
 			peerN.setMyId(Integer.parseInt(keys));
-			Request req = new Request(peerN);
+			Request req = new Request(peerN, "localhost", 2000);
 			peerN.runListener(req);
 
 			DataSender d = new DataSender();
 			JSONObject obj = new JSONObject();
 			obj.put("chordpeer", peerN.toJSON(peerN,  true));
 			obj.put("chatroom", peerN.getGestionSalon().getChatRoomList().values().iterator().next().toJson());
+			obj.put("req", "JOIN");
 			d.send(obj.toString().getBytes(),"localhost", 2000);
 
 			System.out.println(

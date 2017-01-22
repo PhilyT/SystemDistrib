@@ -20,20 +20,14 @@ public class Annuaire {
     private ArrayList<ChatRoom> listChatRooms;
 
     public ChordPeer getLastConnected() {
-        return lastConnected;
+        return listUsers.get(listUsers.size()-1);
     }
-
-    public void setLastConnected(ChordPeer lastConnected) {
-        this.lastConnected = lastConnected;
-    }
-
-    private ChordPeer lastConnected;
 
     public Annuaire(int port) throws IOException {
         serveur = new ServerSocket(port);
         threadsClients = new ArrayList<Thread>();
         this.listUsers= new ArrayList<ChordPeer>();
-        this.listDisconnectedUsers = new ArrayList<ChordPeer>();
+        this.setListDisconnectedUsers(new ArrayList<ChordPeer>());
         this.setListChatRooms(new ArrayList<ChatRoom>());
     }
 
@@ -90,6 +84,20 @@ public class Annuaire {
 	 */
 	public void setListChatRooms(ArrayList<ChatRoom> listChatRooms) {
 		this.listChatRooms = listChatRooms;
+	}
+
+	/**
+	 * @return the listDisconnectedUsers
+	 */
+	public ArrayList<ChordPeer> getListDisconnectedUsers() {
+		return listDisconnectedUsers;
+	}
+
+	/**
+	 * @param listDisconnectedUsers the listDisconnectedUsers to set
+	 */
+	public void setListDisconnectedUsers(ArrayList<ChordPeer> listDisconnectedUsers) {
+		this.listDisconnectedUsers = listDisconnectedUsers;
 	}
 
 
